@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout source repo
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.SK_SOURCE }}
 
       - name: Push to bikram-ops repo
         run: |
           git config --global user.name "bikram-ops"
-          git config --global user.email "bikram@cleanomatics.com"
+          git config --global user.email "your-email@example.com"
 
-          git remote add target https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/bikram-ops/shankarkholi.git
+          git remote add target https://x-access-token:${{ secrets.SK_GH }}@github.com/bikram-ops/shankarkholi.git
           git push target main --force
