@@ -1,0 +1,24 @@
+name: Sync to bikram-ops
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Push to bikram-ops repo
+        run: |
+          git config --global user.name "bikram-ops"
+          git config --global user.email "bikram@cleanomatics.com"
+
+          git remote add target https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/bikram-ops/shankarkholi.git
+          git push target main --force

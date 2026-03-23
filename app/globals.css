@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ============================= */
+/* BRAND TOKENS (SHANKAR KOHLI) */
+/* ============================= */
+
+:root {
+  /* COLORS */
+  --color-bg: #0D0D0D;
+  --color-gold: #C8A45A;
+  --color-charcoal: #1F1F1F;
+  --color-beige: #F4F1EC;
+  --color-text: #EDEDED;
+  --color-muted: #A1A1A1;
+
+  /* FONTS (connected from layout.tsx) */
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-inter);
+}
+
+/* ============================= */
+/* BASE RESET */
+/* ============================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* ============================= */
+/* TYPOGRAPHY SYSTEM */
+/* ============================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: white;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  color: var(--color-muted);
+  font-size: 1rem;
+}
+
+/* ============================= */
+/* LUXURY UTILITIES */
+/* ============================= */
+
+.text-gold {
+  color: var(--color-gold);
+}
+
+.bg-charcoal {
+  background: var(--color-charcoal);
+}
+
+.bg-beige {
+  background: var(--color-beige);
+  color: #111;
+}
+
+/* ============================= */
+/* SPACING SYSTEM (VERY IMPORTANT) */
+/* ============================= */
+
+section {
+  padding: 6rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: 8rem 3rem;
+  }
+}
+
+/* ============================= */
+/* LAYOUT */
+/* ============================= */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* ============================= */
+/* LINKS (LUXURY STYLE) */
+/* ============================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-gold);
+  transition: 0.3s ease;
+}
+
+/* ============================= */
+/* BUTTON BASE (FOR LATER USE) */
+/* ============================= */
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 25s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
