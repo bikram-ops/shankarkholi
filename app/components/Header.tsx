@@ -9,7 +9,6 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [prevIndex, setPrevIndex] = useState(-1);
   const [direction, setDirection] = useState<"left" | "right">("right");
 
   const navItems = [
@@ -19,7 +18,7 @@ export default function Header() {
     { label: "Contact", href: "#final-cta" },
   ];
 
-  /* ───────── SCROLL DETECTION ───────── */
+  /* SCROLL DETECTION */
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
@@ -31,7 +30,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* ───────── SCROLL SPY ───────── */
+  /* SCROLL SPY */
   useEffect(() => {
     const sections = document.querySelectorAll("[data-section]");
 
@@ -56,15 +55,12 @@ export default function Header() {
 
       if (index !== -1 && index !== activeIndex) {
         const newDirection = index > activeIndex ? "right" : "left";
-
         setDirection(newDirection);
-        setPrevIndex(activeIndex);
         setActiveIndex(index);
       }
 
       if (!current) {
-        setPrevIndex(activeIndex);
-        setActiveIndex(-1); // hero → no active
+        setActiveIndex(-1);
       }
     };
 
@@ -82,22 +78,22 @@ export default function Header() {
           : "bg-transparent py-3 md:py-5"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between">
 
         {/* BRAND */}
         <div
-          className="leading-tight cursor-pointer select-none transition-opacity hover:opacity-80"
+          className="leading-tight cursor-pointer select-none transition-opacity hover:opacity-80 max-w-[55%] sm:max-w-none"
           onClick={() => {
             if (window.scrollY > 50) {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <h3 className="text-sm md:text-lg font-semibold tracking-wide">
+          <h3 className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.08em]">
             Shankar Kohli
           </h3>
 
-          <p className="hidden sm:block text-[9px] md:text-xs text-gray-400 tracking-wider uppercase">
+          <p className="hidden sm:block text-[8px] sm:text-[9px] md:text-xs text-gray-400 tracking-[0.12em] uppercase leading-tight">
             Luxury Branded Residences Advisor
           </p>
         </div>
@@ -127,10 +123,7 @@ export default function Header() {
                         scaleX: 0,
                         originX: direction === "right" ? 1 : 0,
                       }}
-                      transition={{
-                        duration: 0.35,
-                        ease: "easeInOut",
-                      }}
+                      transition={{ duration: 0.35, ease: "easeInOut" }}
                       className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#C8A45A]"
                     />
                   )}
@@ -141,41 +134,30 @@ export default function Header() {
         </nav>
 
         {/* RIGHT SIDE */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
 
-         <motion.button
-  whileHover={{ scale: 1.05 }}
-  whileTap={{ scale: 0.97 }}
-  onClick={() => {
-    window.location.href =
-      "mailto:info@markrealesstate.com?subject=Consultation Request&body=Hello,%0D%0A%0D%0AI would like to book a consultation.";
-  }}
-  className="bg-[#C8A45A] text-black px-4 md:px-6 py-2 text-[10px] md:text-sm tracking-[0.12em] flex items-center gap-2"
->
-  <Phone size={14} />
-  <span>Book a Consultation</span>
-</motion.button>
+          {/* CTA BUTTON */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => {
+              window.location.href =
+                "mailto:info@markrealesstate.com?subject=Consultation Request&body=Hello,%0D%0A%0D%0AI would like to book a consultation.";
+            }}
+            className="bg-[#C8A45A] text-black px-3 sm:px-4 md:px-6 py-2 text-[9px] sm:text-[10px] md:text-sm tracking-[0.12em] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap"
+          >
+            <Phone size={12} />
+            <span>Book Consultation</span>
+          </motion.button>
 
           {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden flex flex-col gap-[4px]"
+            className="md:hidden flex flex-col gap-[4px] p-2 -mr-2"
           >
-            <span
-              className={`w-5 h-[2px] bg-white transition ${
-                open ? "rotate-45 translate-y-[6px]" : ""
-              }`}
-            />
-            <span
-              className={`w-5 h-[2px] bg-white transition ${
-                open ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`w-5 h-[2px] bg-white transition ${
-                open ? "-rotate-45 -translate-y-[6px]" : ""
-              }`}
-            />
+            <span className={`w-5 h-[2px] bg-white transition ${open ? "rotate-45 translate-y-[6px]" : ""}`} />
+            <span className={`w-5 h-[2px] bg-white transition ${open ? "opacity-0" : ""}`} />
+            <span className={`w-5 h-[2px] bg-white transition ${open ? "-rotate-45 -translate-y-[6px]" : ""}`} />
           </button>
 
         </div>
@@ -188,9 +170,9 @@ export default function Header() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="md:hidden bg-black px-6 py-6"
+            className="md:hidden bg-black px-6 py-8 border-t border-white/10"
           >
-            <div className="flex flex-col gap-5 text-base">
+            <div className="flex flex-col gap-6 text-base">
               {navItems.map((item, i) => {
                 const isActive = activeIndex === i;
 
