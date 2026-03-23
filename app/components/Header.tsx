@@ -85,7 +85,7 @@ export default function Header() {
         >
           {/* MOBILE */}
           <h3 className="text-sm font-semibold tracking-[0.12em] uppercase sm:hidden truncate">
-            SHANKAR
+            SK
           </h3>
 
           {/* DESKTOP */}
