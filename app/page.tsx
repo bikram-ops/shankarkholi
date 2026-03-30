@@ -5,7 +5,7 @@ import { useRef , useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Image from "next/image";
-import { ChevronLeft,  ChevronRight } from "lucide-react";
+import { ChevronLeft,  ChevronRight, User, Phone, Mail, IndianRupee  } from "lucide-react";
 
 /* ───────── ANIMATION SYSTEM ───────── */
 const fadeUp = {
@@ -60,7 +60,8 @@ const residences = [
 ];
 
 export default function Page() {
-
+const [success, setSuccess] = useState(false);
+const [loading, setLoading] = useState(false);
 const [activeIndex, setActiveIndex] = useState<number>(0);
 
 const videos: string[] = [
@@ -172,9 +173,10 @@ const prevSlide = () => {
   whileHover="hover"
   whileTap={{ scale: 0.97 }}
   onClick={() => {
-    window.location.href =
-      "mailto:info@markrealesstate.com?subject=Deep-Dive Consultation&body=Hello,%0D%0A%0D%0AI would like to book a deep-dive consultation.";
-  }}
+  document
+    .getElementById("final-cta")
+    ?.scrollIntoView({ behavior: "smooth" });
+}}
   className="relative flex-1 bg-[#C8A45A] text-black py-2 md:py-3 text-xs md:text-sm tracking-[0.08em] flex items-center justify-center gap-2 overflow-hidden group"
 >
   <span className="absolute inset-0 bg-[#C8A45A]/20 opacity-0 group-hover:opacity-100 transition duration-500 blur-xl" />
@@ -899,8 +901,11 @@ const prevSlide = () => {
   </div>
 </section>
      {/* ═════════ FINAL CTA (PREMIUM CLOSE) ═════════ */}
-<section id="final-cta" data-section="final-cta" className="relative py-28 md:py-36 px-5 text-center overflow-hidden">
 
+<section
+  id="final-cta"
+  className="relative py-28 md:py-36 px-5 overflow-hidden"
+>
   {/* BACKGROUND */}
   <div
     className="absolute inset-0 bg-cover bg-center"
@@ -908,66 +913,178 @@ const prevSlide = () => {
   />
 
   {/* OVERLAY */}
-  <div className="absolute inset-0 bg-black/70" />
+  <div className="absolute inset-0 bg-black/80" />
 
-  <div className="relative z-10 max-w-3xl mx-auto">
+  <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
-    {/* LABEL */}
-    <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-6">
-      PRIVATE ACCESS
-    </p>
+    {/* LEFT SIDE */}
+    <div>
 
-    {/* HEADING */}
-    <Reveal>
+      <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-6">
+        PRIVATE ACCESS
+      </p>
+
       <h2 className="text-2xl md:text-4xl text-[#E8E2D9] mb-6 leading-snug">
-        Access Opportunities
+        Apply for Access to
         <span className="block italic text-[#C8A45A] mt-2">
-          Not Available Publicly
+          Off-Market Opportunities
         </span>
       </h2>
-    </Reveal>
 
-    {/* SUBTEXT */}
-    <Reveal>
-      <p className="text-[#B0B0B0] text-sm md:text-base mb-10">
-        A limited number of investors are onboarded each month for
-        private consultation and access to off-market deals.
+      <p className="text-[#B0B0B0] text-sm md:text-base mb-8 max-w-md">
+        This is not a public enquiry form. Only a limited number of serious
+        investors are onboarded each month.
       </p>
-    </Reveal>
 
-    {/* CTA BUTTONS */}
-    <Reveal>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="space-y-3 text-sm text-[#C8A45A]">
+        <p>✔ Direct developer access</p>
+        <p>✔ Pre-launch inventory advantage</p>
+        <p>✔ Strategic investment guidance</p>
+      </div>
 
-        {/* PRIMARY */}
-       <button
-  onClick={() => {
-    window.location.href =
-      "mailto:info@markrealesstate.com?subject=Private Consultation Request";
-  }}
-  className="bg-[#C8A45A] text-black px-8 py-3 text-sm tracking-[0.1em] hover:opacity-90 transition"
+    </div>
+
+    {/* RIGHT SIDE FORM */}
+    <div className="bg-[#0f0f0f]/90 backdrop-blur-md border border-[#1a1a1a] p-6 md:p-8">
+
+    <form
+  onSubmit={async (e) => {
+  e.preventDefault();
+
+  setLoading(true);
+  setSuccess(false);
+
+  const form = e.target as HTMLFormElement;
+  const data = new FormData(form);
+
+  const payload = {
+    name: data.get("name"),
+    phone: data.get("phone"),
+    email: data.get("email"),
+    budget: data.get("budget"),
+    purpose: data.get("purpose"),
+    message: data.get("message"),
+  };
+
+  try {
+    const res = await fetch("/api/lead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      setSuccess(true);
+      form.reset();
+    } else {
+      alert("Something went wrong.");
+    }
+  } catch (error) {
+    alert("Network error. Try again.");
+  } finally {
+    setLoading(false);
+  }
+}}
+
+  className="space-y-4"
 >
-  Request Private Consultation
+
+        {/* NAME */}
+        <div className="relative">
+          <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#777]" />
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+            className="w-full bg-black border border-[#1f1f1f] pl-10 pr-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+          />
+        </div>
+
+        {/* PHONE */}
+        <div className="relative">
+          <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#777]" />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone Number"
+            required
+            className="w-full bg-black border border-[#1f1f1f] pl-10 pr-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+          />
+        </div>
+
+        {/* EMAIL */}
+        <div className="relative">
+          <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#777]" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            className="w-full bg-black border border-[#1f1f1f] pl-10 pr-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+          />
+        </div>
+
+        {/* BUDGET */}
+        <div className="relative">
+          <IndianRupee size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#777]" />
+          <select
+            name="budget"
+            required
+            className="w-full bg-black border border-[#1f1f1f] pl-10 pr-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+          >
+            <option value="">Investment Budget</option>
+            <option value="1-3cr">₹1Cr – ₹3Cr</option>
+            <option value="3-5cr">₹3Cr – ₹5Cr</option>
+            <option value="5cr+">₹5Cr+</option>
+          </select>
+        </div>
+
+        {/* PURPOSE */}
+        <select
+          name="purpose"
+          required
+          className="w-full bg-black border border-[#1f1f1f] px-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+        >
+          <option value="">Purpose</option>
+          <option value="investment">Investment</option>
+          <option value="end-use">End Use</option>
+          <option value="nri">NRI Investment</option>
+        </select>
+
+        {/* MESSAGE */}
+        <textarea
+          name="message"
+          placeholder="Additional details (optional)"
+          rows={3}
+          className="w-full bg-black border border-[#1f1f1f] px-4 py-3 text-sm text-white outline-none focus:border-[#C8A45A] focus:shadow-[0_0_0_1px_#C8A45A]"
+        />
+
+        {/* SUBMIT */}
+       <button
+  type="submit"
+  disabled={loading}
+  className="w-full bg-[#C8A45A] text-black py-3 text-sm tracking-[0.1em] hover:opacity-90 transition disabled:opacity-60"
+>
+  {loading ? "Submitting..." : "Apply for Private Access"}
 </button>
 
-        {/* SECONDARY */}
-        <a href="#deals">
-  <button className="border border-[#C8A45A] text-[#C8A45A] px-8 py-3 text-sm tracking-[0.1em] hover:bg-[#C8A45A]/10 transition">
-    View Available Opportunities
-  </button>
-</a>
+{success && (
+  <div className="mb-4 p-4 border border-green-500/30 bg-green-500/10 text-green-400 text-sm text-center">
+    ✅ Application submitted successfully. Our team will contact you shortly.
+  </div>
+)}
+      </form>
 
-      </div>
-    </Reveal>
+      <p className="text-[#666] text-xs mt-4 text-center">
+        Discreet • Confidential • No Spam
+      </p>
 
-    {/* TRUST LINE */}
-    <p className="text-[#777] text-xs mt-6">
-      Discreet • By Invitation • No Obligation
-    </p>
+    </div>
 
   </div>
 </section>
-
       <Footer />
 
     </main>

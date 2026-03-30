@@ -141,9 +141,10 @@ export default function Header() {
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.97 }}
   onClick={() => {
-    window.location.href =
-      "mailto:info@markrealesstate.com?subject=Consultation Request&body=Hello,%0D%0A%0D%0AI would like to book a consultation.";
-  }}
+  document
+    .getElementById("final-cta")
+    ?.scrollIntoView({ behavior: "smooth" });
+}}
   className="bg-[#C8A45A] text-black 
              px-3 sm:px-4 md:px-6 
              py-2 
