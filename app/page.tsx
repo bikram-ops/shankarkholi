@@ -142,7 +142,7 @@ const prevSlide = () => {
   <div className="absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-24">
 
     <p className="text-[#C8A45A] text-[10px] tracking-[0.3em] mb-2">
-      FOUNDER OF MARK REAL ESTATE
+      FOUNDER OF MARK REAL ESSTATE
     </p>
 
     <h1 className="text-3xl font-serif leading-tight mb-3">
