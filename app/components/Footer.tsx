@@ -10,16 +10,13 @@ export default function Footer() {
         <div>
 
           {/* LOGO */}
-          <div className="mb-4 w-[140px]">
-  <Image
+    <div className="mb-4">
+  <img
     src="/images/logo.svg"
     alt="Mark Real Estate"
-    width={140}
-    height={20}
-    className="w-full h-auto object-contain"
+    className="w-[110px] sm:w-[130px] md:w-[150px] h-auto"
   />
 </div>
-
           <p className="text-[#E8E2D9] text-sm">
             Shankar Kohli
           </p>

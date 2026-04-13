@@ -620,7 +620,13 @@ paddingBottom: isMobile ? "60px" : "0px",
             }}
             onClick={() => setLightbox(i)}
           >
-            <Image src={g.src} alt={g.alt} fill style={{ objectFit: "cover" }} />
+            <Image
+  src={g.src}
+  alt={g.alt}
+  fill
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  style={{ objectFit: "cover" }}
+/>
             <div className="westin-overlay" />
             <p className="westin-gal-label">{g.label}</p>
           </div>
@@ -648,16 +654,17 @@ paddingBottom: isMobile ? "60px" : "0px",
         overflow: "hidden",
       }}
     >
-      <Image
-        src={GALLERY_IMAGES[lightbox].src}
-        alt=""
-        fill
-        style={{
-          objectFit: "cover",
-          filter: "blur(40px) brightness(0.4)",
-          transform: "scale(1.2)",
-        }}
-      />
+     <Image
+  src={GALLERY_IMAGES[lightbox].src}
+  alt=""
+  fill
+  sizes="100vw"
+  style={{
+    objectFit: "cover",
+    filter: "blur(40px) brightness(0.4)",
+    transform: "scale(1.2)",
+  }}
+/>
     </div>
 
     {/* 🔥 MAIN SLIDER */}
@@ -689,14 +696,15 @@ paddingBottom: isMobile ? "60px" : "0px",
               }}
             >
               {/* 🔥 MAIN IMAGE */}
-              <Image
-                src={img.src}
-                alt={img.alt}
-                fill
-                style={{
-                  objectFit: "cover", // ✅ NO BLACK SPACE
-                }}
-              />
+             <Image
+  src={img.src}
+  alt={img.alt}
+  fill
+  sizes="100vw"
+  style={{
+    objectFit: "cover",
+  }}
+/>
 
               {/* 🔥 GRADIENT OVERLAY */}
               <div

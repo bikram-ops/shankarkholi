@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./styles/westin.css";
 import "swiper/css";
 import "swiper/css/navigation";
+
 export const metadata: Metadata = {
   title: {
     default: "Westin Residences | Luxury Living by Mark Real Esstate",
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "Westin Residences",
     images: [
       {
-        url: "images/westin/favicon.ico", // add your OG image in public folder
+        url: "/images/westin/favicon.ico", // ✅ fix path (add /)
         width: 1200,
         height: 630,
         alt: "Westin Residences",
@@ -49,16 +50,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className="bg-white text-gray-900">
-        {children}
-      </body>
-    </html>
-  );
+  return <>{children}</>; // ✅ ONLY this
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { useRef , useState } from "react";
 import Header from "./components/Header";
@@ -125,12 +125,13 @@ const prevSlide = () => {
 
   {/* FULL SCREEN IMAGE */}
   <Image
-    src="/images/shankar-kohli.jpeg"
-    alt="Shankar Kohli"
-    fill
-    className="object-cover object-[50%_20%]"
-    priority
-  />
+  src="/images/shankar-kohli.jpeg"
+  alt="Shankar Kohli"
+  fill
+  sizes="(max-width: 768px) 100vw, 50vw"
+  className="object-cover object-[50%_20%]"
+  priority
+/>
 
   {/* DARK OVERLAY */}
   <div className="absolute inset-0 bg-black/20" />
@@ -200,7 +201,7 @@ const prevSlide = () => {
           src="/images/luxury-investor.jpg"
           alt="Luxury Real Estate Advisory"
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover scale-105 transition duration-700 ease-out group-hover:scale-110"
         />
 
@@ -474,36 +475,38 @@ const prevSlide = () => {
     {/* RIGHT SIDE - IMAGE COLLAGE */}
     <div className="relative h-[500px] md:h-[600px]">
 
-      {/* MAIN IMAGE */}
-      <div className="absolute w-[70%] h-[70%] top-0 right-0 overflow-hidden rounded-xl">
-        <Image
-          src="/images/lamborghini.png"
-          alt="Main"
-          fill
-          className="object-cover"
-        />
-      </div>
+    {/* MAIN IMAGE */}
+<div className="absolute w-[70%] h-[70%] top-0 right-0 overflow-hidden rounded-xl">
+  <Image
+    src="/images/lamborghini.png"
+    alt="Main"
+    fill
+    sizes="(max-width: 768px) 100vw, 50vw"
+    className="object-cover"
+  />
+</div>
 
-      {/* SMALL IMAGE 1 */}
-      <div className="absolute w-[45%] h-[40%] bottom-0 left-0 overflow-hidden rounded-xl border border-[#C8A45A]/20">
-        <Image
-          src="/images/lambo.png"
-          alt="Interior"
-          fill
-          className="object-cover"
-        />
-      </div>
+{/* SMALL IMAGE 1 */}
+<div className="absolute w-[45%] h-[40%] bottom-0 left-0 overflow-hidden rounded-xl border border-[#C8A45A]/20">
+  <Image
+    src="/images/lambo.png"
+    alt="Interior"
+    fill
+    sizes="(max-width: 768px) 50vw, 25vw"
+    className="object-cover"
+  />
+</div>
 
-      {/* SMALL IMAGE 2 */}
-      <div className="absolute w-[35%] h-[30%] top-[50%] left-[10%] overflow-hidden rounded-xl border border-[#C8A45A]/20">
-        <Image
-          src="/images/lamborgini-lifestyle.png"
-          alt="Detail"
-          fill
-          className="object-cover"
-        />
-      </div>
-
+{/* SMALL IMAGE 2 */}
+<div className="absolute w-[35%] h-[30%] top-[50%] left-[10%] overflow-hidden rounded-xl border border-[#C8A45A]/20">
+  <Image
+    src="/images/lamborgini-lifestyle.png"
+    alt="Detail"
+    fill
+    sizes="(max-width: 768px) 50vw, 20vw"
+    className="object-cover"
+  />
+</div>
     </div>
 
   </div>
@@ -538,52 +541,53 @@ const prevSlide = () => {
     {/* GRID */}
     <div className="grid md:grid-cols-2 gap-8">
 
-      {/* WESTIN */}
-      <div className="group bg-[#111] border border-[#1a1a1a] hover:border-[#C8A45A]/30 transition duration-500 overflow-hidden">
+     {/* WESTIN */}
+<Link href="/westinresidences" className="block">
+  <div className="group bg-[#111] border border-[#1a1a1a] hover:border-[#C8A45A]/30 transition duration-500 overflow-hidden cursor-pointer">
 
-        {/* IMAGE */}
-        <div className="relative h-[300px] md:h-[360px] overflow-hidden">
-          <Image
-            src="/images/westin.jpg"
-            alt="Westin Residences"
-            fill
-            className="object-cover transition duration-700 group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        </div>
+    {/* IMAGE */}
+    <div className="relative h-[300px] md:h-[360px] overflow-hidden">
+      <Image
+        src="/images/westin.jpg"
+        alt="Westin Residences"
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover transition duration-700 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+    </div>
 
-        {/* CONTENT */}
-        <div className="p-6">
+    {/* CONTENT */}
+    <div className="p-6">
+      <h3 className="text-[#E8E2D9] text-lg mb-2">
+        Westin Residences
+      </h3>
 
-          <h3 className="text-[#E8E2D9] text-lg mb-2">
-            Westin Residences
-          </h3>
+      <p className="text-[#C8A45A] text-sm mb-3">
+        ₹6.5Cr → ₹7.22Cr
+      </p>
 
-          <p className="text-[#C8A45A] text-sm mb-3">
-            ₹6.5Cr → ₹7.22Cr
-          </p>
+      <p className="text-[#8A8A8A] text-sm leading-relaxed">
+        ~35% return on deployed capital through structured pre-launch entry.
+      </p>
 
-          <p className="text-[#8A8A8A] text-sm leading-relaxed">
-            ~35% return on deployed capital through structured pre-launch entry.
-          </p>
+      <div className="w-8 h-[1px] bg-[#C8A45A] mt-5 group-hover:w-12 transition-all duration-300" />
+    </div>
 
-          <div className="w-8 h-[1px] bg-[#C8A45A] mt-5 group-hover:w-12 transition-all duration-300" />
-
-        </div>
-
-      </div>
-
+  </div>
+</Link>
       {/* ELIE SAAB */}
       <div className="group bg-[#111] border border-[#1a1a1a] hover:border-[#C8A45A]/30 transition duration-500 overflow-hidden">
 
         {/* IMAGE */}
         <div className="relative h-[300px] md:h-[360px] overflow-hidden">
           <Image
-            src="/images/elie-saab.webp"
-            alt="Elie Saab Residences"
-            fill
-            className="object-cover transition duration-700 group-hover:scale-110"
-          />
+  src="/images/elie-saab.webp"
+  alt="Elie Saab Residences"
+  fill
+  sizes="(max-width: 768px) 100vw, 50vw"
+  className="object-cover transition duration-700 group-hover:scale-110"
+/>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         </div>
 
