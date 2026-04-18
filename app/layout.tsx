@@ -102,16 +102,18 @@ export default function RootLayout({
   }}
 />
         {/* 🔥 SEO SCHEMA */}
-        <Script id="schema-person" type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Person",
-            name: "Shankar Kohli",
-            jobTitle: "Luxury Real Estate Advisor",
-            areaServed: "Gurugram, India",
-            url: "https://shankarkohli.com",
-          })}
-        </Script>
+        <Script id="schema-realestate" type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  name: "Shankar Kohli",
+  url: "https://shankarkohli.com",
+  areaServed: "Gurugram, India",
+  description:
+    "Luxury real estate advisor specializing in branded residences and HNI investments.",
+  image: "https://shankarkohli.com/images/og-image.jpeg",
+})}
+</Script>
 
         {/* APP */}
         <div className="w-full overflow-x-hidden">{children}</div>

@@ -1426,15 +1426,15 @@ useEffect(() => {
       {[
         {
           type: "3 BHK",
-          size: "2,000+",
-          price: "Starting ₹5 Cr*",
+          size: "2,050",
+          price: "Starting ₹4.75 Cr*",
           image: "/images/lambo/apartments/3bhk.png",
           desc: "Ideal for refined city living",
         },
         {
           type: "4 BHK",
-          size: "2,400+",
-          price: "Starting ₹6 Cr*",
+          size: "2,400",
+          price: "Starting ₹5.75 Cr*",
           image: "/images/lambo/apartments/4bhk.png",
           desc: "Crafted for expansive luxury lifestyles",
           highlight: true,
@@ -1442,7 +1442,7 @@ useEffect(() => {
         {
           type: "4 BHK + Utility",
           size: "2,800",
-          price: "Starting ₹7 Cr*",
+          price: "Starting ₹6.75 Cr*",
           image: "/images/lambo/apartments/4bhk-utility.png",
           desc: "Ultimate space for elite living",
         },
@@ -2205,9 +2205,9 @@ useEffect(() => {
             }
           >
             <option value="">Select Configuration</option>
-            <option>3 BHK - ₹5 Cr+</option>
-            <option>4 BHK - ₹6 Cr+</option>
-            <option>4 BHK + Utility - ₹7 Cr+</option>
+            <option>3 BHK - ₹4.75 Cr+</option>
+            <option>4 BHK - ₹5.75 Cr+</option>
+            <option>4 BHK + Utility - ₹6.75 Cr+</option>
           </select>
 
           <textarea
