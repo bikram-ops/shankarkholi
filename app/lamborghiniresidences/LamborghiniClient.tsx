@@ -942,7 +942,7 @@ const reasons = [
   { title: "Curated Luxury Ecosystem", body: "Lifestyle-led amenities designed for elite living." },
   { title: "Long-Term Asset Growth", body: "Positioned for strong capital appreciation over time." },
 ];
-export default function LamborghiniResidences() {
+export default function LamborghiniClient() {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", config: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -1296,40 +1296,13 @@ useEffect(() => {
       transition={{ duration: 0.6 }}
       style={{
         marginTop: "18px",
-        fontSize: "13px",
+        fontSize: "14px",
         color: "rgba(255,255,255,0.7)",
       }}
     >
-      Limited Inventory · ₹5 Cr+ · Reserved for Select Buyers
+      Limited Inventory · ₹4.75 Cr+ · Reserved for Select Buyers
     </motion.p>
   </motion.div>
-
-  {/* SCROLL */}
-  <div
-    style={{
-      position: "absolute",
-      bottom: "30px",
-      left: "50%",
-      transform: "translateX(-50%)",
-      zIndex: 2,
-      textAlign: "center",
-      color: "rgba(255,255,255,0.6)",
-      fontSize: "10px",
-      letterSpacing: "0.3em",
-    }}
-  >
-    SCROLL
-    <div
-      style={{
-        marginTop: "8px",
-        width: "2px",
-        height: "30px",
-        background: "rgba(255,255,255,0.4)",
-        animation: "scrollLine 1.8s infinite",
-      }}
-    />
-  </div>
-
 
 
 </section>
@@ -1812,7 +1785,7 @@ useEffect(() => {
         height: "clamp(320px, 45vw, 520px)",
         borderRadius: "18px",
         overflow: "hidden",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.65)",
+        boxShadow: "0 40px 100px rgba(0, 0, 0, 0)",
       }}
     >
       {/* MAP IMAGE */}
@@ -1834,7 +1807,7 @@ useEffect(() => {
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(circle at center, rgba(0,0,0,0.2), rgba(0,0,0,0.7))",
+  "radial-gradient(circle at center, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))",
         }}
       />
 
@@ -2048,7 +2021,7 @@ useEffect(() => {
               style={{
                 fontSize: "42px",
                 fontWeight: 300,
-                color: "rgba(180,0,0,0.22)",
+                color: "rgba(236, 22, 22, 0.66)",
                 minWidth: "50px",
                 fontStyle: "italic",
               }}
