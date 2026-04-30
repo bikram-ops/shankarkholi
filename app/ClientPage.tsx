@@ -321,7 +321,7 @@ useEffect(() => {
 
   intervalRef.current = setInterval(() => {
     setActiveIndex((prev) => (prev + 1) % caseStudies.length);
-  }, 3500);
+  }, 5500);
 
   return () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -869,25 +869,25 @@ useEffect(() => {
 
 
 {/* ═════════ CASE STUDIES (ELITE VERSION) ═════════ */}
-<section id="case-studies" data-section="case-studies" className="py-28 md:py-36 px-5 bg-[#0e0e0e] overflow-hidden">
+<section
+  id="case-studies"
+  className="py-24 md:py-32 px-5 bg-[#0e0e0e]"
+>
   <div className="max-w-6xl mx-auto text-center">
 
     <p className="text-[#C8A45A] text-[10px] tracking-[0.4em] mb-6">
       STRATEGIC ENTRY CASE STUDIES
     </p>
 
-    <h2 className="text-3xl md:text-5xl text-[#E8E2D9] mb-20">
+    <h2 className="text-3xl md:text-5xl text-[#E8E2D9] mb-16 md:mb-20">
       Investment Strategies.
       <span className="block italic text-[#C8A45A] mt-2">
         Backed by Data & Access
       </span>
     </h2>
 
-    <div
-      className="relative flex items-center justify-center"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
+    {/* ✅ FIXED HEIGHT WRAPPER (NO CROP) */}
+    <div className="relative w-full max-w-5xl mx-auto">
 
       {/* NAV */}
       <button
@@ -896,7 +896,7 @@ useEffect(() => {
             (prev - 1 + caseStudies.length) % caseStudies.length
           )
         }
-        className="absolute left-0 z-20 text-white/40 hover:text-white"
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-30 text-white/40 hover:text-white"
       >
         ←
       </button>
@@ -907,109 +907,75 @@ useEffect(() => {
             (prev + 1) % caseStudies.length
           )
         }
-        className="absolute right-0 z-20 text-white/40 hover:text-white"
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-30 text-white/40 hover:text-white"
       >
         →
       </button>
 
-      {/* CARDS */}
-      <div className="relative w-full max-w-5xl h-[560px]">
+      {/* ✅ STACK CONTAINER */}
+      <div className="relative flex items-center justify-center">
 
         {caseStudies.map((item, i) => {
           const isActive = i === activeIndex;
 
-          const isGraphCase = item.start && item.end;
-          const isValueCase = item.launchPrice && item.currentPrice;
-
-          const roi =
-            isGraphCase && !item.isAccessDeal
-              ? calculateROI(item.start!, item.end!)
-              : 0;
-
           return (
             <motion.div
               key={i}
+              initial={false}
               animate={{
-                scale: isActive ? 1 : 0.85,
-                opacity: isActive ? 1 : 0.25,
-                x:
-                  i === activeIndex
-                    ? 0
-                    : i < activeIndex
-                    ? -240
-                    : 240,
-                rotate: isActive ? 0 : i < activeIndex ? -2 : 2,
-                zIndex: isActive ? 10 : 5,
-                filter: isActive ? "none" : "blur(2px)",
+                scale: isActive ? 1 : 0.9,
+                opacity: isActive ? 1 : 0,
+                x: isActive ? 0 : i < activeIndex ? -220 : 220,
+                position: isActive ? "relative" : "absolute",
               }}
-              transition={{ duration: 0.5 }}
-              className="absolute w-full"
+              transition={{ duration: 0.4 }}
+              className="w-full"
             >
-              <div className="group bg-[#121212] border border-[#1f1f1f] hover:border-[#C8A45A]/40 transition duration-500">
+              {/* ✅ CARD (AUTO HEIGHT — NO CROP EVER) */}
+              <div className="bg-[#121212] border border-[#1f1f1f]">
 
                 {/* IMAGE */}
-                <div className="relative h-[240px]">
+                <div className="relative h-[220px] md:h-[260px]">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
                     className="object-cover"
+                    priority={isActive}
                   />
                   <div className="absolute inset-0 bg-black/40" />
-
-                  <div className="absolute top-4 left-4 text-[10px] text-[#C8A45A] tracking-[0.2em]">
-                    {item.tag}
-                  </div>
                 </div>
 
-                <div className="p-8 text-left">
+                <div className="p-6 md:p-8 text-left">
 
-                  {/* CASE TYPE */}
-                  <p className="text-[10px] text-[#777] tracking-[0.2em] mb-2">
-                    {item.isAccessDeal
-                      ? "PRIVATE ACCESS"
-                      : item.start
-                      ? "MARKET GROWTH"
-                      : "INVESTMENT OUTCOME"}
+                  <p className="text-[10px] text-[#777] mb-2">
+                    {item.tag}
                   </p>
 
-                  {/* NAME */}
                   <p className="text-[#C8A45A] text-xs mb-4">
                     {item.name}
                   </p>
 
-                  {/* 💰 HERO MONEY */}
-                  {isValueCase && (
-                    <div className="mb-6">
-                      {item.appreciation && (
-                        <p className="text-3xl md:text-4xl text-[#C8A45A] font-light leading-none">
-                          {item.appreciation}
-                        </p>
-                      )}
-
-                      {item.gain && (
-                        <p className="text-xs text-[#888] mt-1">
-                          {item.gain} wealth created
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 📊 GRAPH ROI */}
-                  {isGraphCase && !item.isAccessDeal && (
-                    <p className="text-2xl text-[#C8A45A] mb-4">
-                      ROI: <Counter value={roi} />
+                  {/* VALUE */}
+                  {item.appreciation && (
+                    <p className="text-3xl text-[#C8A45A] mb-2">
+                      {item.appreciation}
                     </p>
                   )}
 
-                  {/* 💸 CLEAN PRICE */}
-                  {isValueCase && (
-                    <div className="mb-6 text-sm">
+                  {item.gain && (
+                    <p className="text-xs text-[#888] mb-4">
+                      {item.gain} wealth created
+                    </p>
+                  )}
+
+                  {/* PRICE */}
+                  {item.launchPrice && item.currentPrice && (
+                    <div className="mb-4 text-sm">
                       <div className="flex justify-between text-[#aaa]">
                         <span>Entry</span>
                         <span>{item.launchPrice}</span>
                       </div>
-
                       <div className="flex justify-between text-white mt-1">
                         <span>Current</span>
                         <span>{item.currentPrice}</span>
@@ -1017,36 +983,20 @@ useEffect(() => {
                     </div>
                   )}
 
-                  {/* ⏱ TIMEFRAME */}
+                  {/* YEAR */}
                   {item.entryYear && item.currentYear && (
-                    <p className="text-[11px] text-[#666] mb-6">
+                    <p className="text-[11px] text-[#666] mb-4">
                       {item.entryYear} → {item.currentYear}
                     </p>
                   )}
 
-                  {/* 🔒 ACCESS */}
-                  {item.isAccessDeal && (
-                    <div className="text-sm text-[#C8A45A] mb-6">
-                      Private Inventory Secured Before Public Release
-                    </div>
-                  )}
-
-                  {/* 📈 GRAPH */}
-                  {isGraphCase && !item.isAccessDeal && (
-                    <GrowthLine
-                      start={item.start}
-                      mid={item.mid}
-                      end={item.end}
-                    />
-                  )}
-
-                  {/* 🧠 INSIGHT */}
-                  <p className="text-[#8A8A8A] text-sm mt-4 leading-relaxed">
+                  {/* INSIGHT */}
+                  <p className="text-[#8A8A8A] text-sm leading-relaxed">
                     {item.insight}
                   </p>
 
                   {/* CTA */}
-                  <div className="mt-6 flex items-center justify-between">
+                  <div className="mt-6 flex justify-between items-center">
                     <span className="text-xs text-[#666]">
                       PRIVATE ACCESS
                     </span>
@@ -1069,31 +1019,28 @@ useEffect(() => {
             </motion.div>
           );
         })}
-
       </div>
     </div>
 
   </div>
-  {/* VIEW ALL CASE STUDIES */}
-<div className="mt-20 text-center">
 
-  <Link href="/case-studies">
-    <button className="group relative inline-flex items-center gap-2 px-8 py-3 
-                      border border-[#C8A45A]/40 
-                      text-[#C8A45A] text-sm tracking-[0.15em]
-                      hover:bg-[#C8A45A] hover:text-black 
-                      transition duration-300">
+  {/* ✅ BUTTON ALWAYS VISIBLE */}
+  <div className="mt-20 text-center">
+    <Link href="/case-studies">
+      <button className="group inline-flex items-center gap-2 px-8 py-3 
+                        border border-[#C8A45A]/40 
+                        text-[#C8A45A] text-sm tracking-[0.15em]
+                        hover:bg-[#C8A45A] hover:text-black 
+                        transition duration-300">
 
-      VIEW ALL CASE STUDIES
+        VIEW ALL CASE STUDIES
 
-      <span className="group-hover:translate-x-1 transition">
-        →
-      </span>
-
-    </button>
-  </Link>
-
-</div>
+        <span className="group-hover:translate-x-1 transition">
+          →
+        </span>
+      </button>
+    </Link>
+  </div>
 </section>
 
 
