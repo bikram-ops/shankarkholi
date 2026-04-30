@@ -1,4 +1,32 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
+
+// ✅ Georama
+const georama = localFont({
+  src: [
+    {
+      path: "./fonts/Georama_ExtraExpanded-SemiBold.ttf",
+      weight: "600",
+    },
+  ],
+  variable: "--font-georama",
+});
+
+// ✅ Kanit
+const kanit = localFont({
+  src: [
+    {
+      path: "./fonts/Kanit-Light.ttf",
+      weight: "300",
+    },
+    {
+      path: "./fonts/Kanit-SemiBold.ttf",
+      weight: "600",
+    },
+  ],
+  variable: "--font-kanit",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://shankarkohli.com"),
 
@@ -37,7 +65,6 @@ export const metadata: Metadata = {
     description:
       "Experience Lamborghini living in Gurgaon (Gurugram). Limited residences starting ₹5 Cr on SPR.",
     url: "https://shankarkohli.com/lamborghiniresidences",
-
     images: [
       {
         url: "/images/lambo/og-lambo.png",
@@ -67,16 +94,20 @@ export const metadata: Metadata = {
   },
 };
 
-// ✅ THIS IS THE FIX
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
+// ✅ FIXED LAYOUT (NO <html> / <body>)
 export default function LamborghiniLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <div className={`${georama.variable} ${kanit.variable}`}>
+      {children}
+    </div>
+  );
 }

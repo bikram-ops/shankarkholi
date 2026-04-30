@@ -310,3 +310,57 @@ input:focus {
       transition: all 0.3s ease;
       filter: drop-shadow(0 0 6px rgba(180,0,0,0.3));
     }
+
+    .desktop-only {
+  display: inline;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: inline;
+  }
+
+  .nav-cta {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Default (desktop) */
+.nav-cta {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav-cta {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: inline;
+  }
+}
+
+/* Default visibility */
+.desktop-only {
+  display: inline;
+}
+
+.mobile-only {
+  display: none;
+}

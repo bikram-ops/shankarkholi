@@ -1,27 +1,22 @@
 import ClientPage from "./ClientPage";
+import { getAllPosts } from "@/lib/mdx";
 
 export const metadata = {
-  title: "Shankar Kohli | Luxury Real Estate Advisor in Gurugram",
-  description: "Discover exclusive Lamborghini & premium luxury residences in Gurugram. Private access for HNI investors. Limited inventory available.",
-keywords: [
-  "Luxury apartments Gurugram",
-  "Lamborghini residences Gurgaon",
-  "HNI real estate India",
-  "premium properties Gurgaon",
-],
-
+  title: "Luxury Real Estate in Gurugram | Shankar Kohli",
+  description:
+    "Buy luxury apartments in Gurugram including Lamborghini Residences & branded homes.",
 };
 
-
 export default function Page() {
-  return (
-    <>
-      {/* SEO CONTENT (Google reads this) */}
-     <h1 style={{ position: "absolute", left: "-9999px" }}>
-  Luxury Real Estate in Gurugram | Shankar Kohli
-</h1>
+  const posts = getAllPosts();
 
-      <ClientPage />
-    </>
-  );
+  const latestPosts = posts
+    .sort(
+      (a, b) =>
+        new Date(b.date || "").getTime() -
+        new Date(a.date || "").getTime()
+    )
+    .slice(0, 3);
+
+  return <ClientPage posts={latestPosts} />;
 }

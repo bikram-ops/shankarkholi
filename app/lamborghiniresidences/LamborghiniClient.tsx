@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import {
  
 } from "lucide-react";
 
+
 const container = {
   hidden: {},
   show: {
@@ -23,6 +24,83 @@ const container = {
   },
 };
 
+const amenityImages = [
+  {
+    title: "Outdoor Fitness Area",
+    desc: "A workout space built beyond walls.",
+    image: "/images/lambo/amenities/outdoor-fitness.jpg",
+  },
+  {
+    title: "Poolside Area",
+    desc: "Your place to unwind after a long day.",
+    image: "/images/lambo/amenities/pool.jpg",
+  },
+  {
+    title: "Cricket Practice Nets",
+    desc: "A place to train technique and flow.",
+    image: "/images/lambo/amenities/cricket.jpg",
+  },
+  {
+    title: "Kids Play Area",
+    desc: "A safe corner for your young ones.",
+    image: "/images/lambo/amenities/kids.jpg",
+  },
+  {
+    title: "Jogging Track",
+    desc: "A circuit to start your morning routine.",
+    image: "/images/lambo/amenities/jogging.jpg",
+  },
+  {
+    title: "Bicycle Track",
+    desc: "A track to train your rhythm.",
+    image: "/images/lambo/amenities/cycle.jpg",
+  },
+  {
+    title: "Club House",
+    desc: "A 50,000 sq.ft. destination for lifestyle.",
+    image: "/images/lambo/amenities/clubhouse.jpg",
+  },
+  {
+    title: "Reception Lobby",
+    desc: "An arrival defined by Italian elegance.",
+    image: "/images/lambo/amenities/lobby.jpg",
+  },
+  {
+    title: "Coffee Cafe",
+    desc: "Moments brewed in refined indulgence.",
+    image: "/images/lambo/amenities/cafe.jpg",
+  },
+  {
+    title: "Banquet",
+    desc: "A grand venue for special occasions.",
+    image: "/images/lambo/amenities/banquet.jpg",
+  },
+  {
+    title: "Kitchen",
+    desc: "Where culinary artistry comes alive.",
+    image: "/images/lambo/amenities/kitchen.jpg",
+  },
+  {
+    title: "Yoga & Gym",
+    desc: "Modern facilities for fitness and mindfulness.",
+    image: "/images/lambo/amenities/gym.jpg",
+  },
+  {
+    title: "Spa & Sauna",
+    desc: "A sanctuary of serene rejuvenation.",
+    image: "/images/lambo/amenities/spa.jpg",
+  },
+  {
+    title: "Salon",
+    desc: "A destination for indulgence and care.",
+    image: "/images/lambo/amenities/salon.jpg",
+  },
+  {
+    title: "Gaming Arcade",
+    desc: "Immersive experiences for leisure.",
+    image: "/images/lambo/amenities/gaming.jpg",
+  },
+];
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   show: {
@@ -51,7 +129,7 @@ const fadeRight = {
 };
 const styles: Record<string, React.CSSProperties> = {
   root: {
-    fontFamily: "'Cormorant Garamond', 'Georgia', serif",
+    fontFamily: "var(--font-georama)",
     background: "#0a0a0a",
     color: "#f0ece4",
     minHeight: "100vh",
@@ -290,14 +368,14 @@ heroFormNote: {
     fontWeight: 700,
     letterSpacing: "0.1em",
     color: "#f5f0e8",
-    fontFamily: "'Cormorant Garamond', serif",
+    fontFamily: "var(--font-georama)",
   },
   navLogoSub: {
     fontSize: "9px",
     letterSpacing: "0.4em",
     color: "#b40000",
     textTransform: "uppercase" as const,
-    fontFamily: "'Montserrat', sans-serif",
+    fontFamily: "var(--font-kanit)",
   },
   navLinks: {
     display: "flex",
@@ -312,7 +390,7 @@ heroFormNote: {
     
     color: "#f9f9f9",
     cursor: "pointer",
-    fontFamily: "'Montserrat', sans-serif",
+    fontFamily: "var(--font-kanit)",
     fontWeight: 600,
     transition: "color 0.2s",
   },
@@ -352,7 +430,7 @@ heroFormNote: {
     background: "#b40000",
   },
   sectionTitle: {
-    fontSize: "clamp(32px, 5vw, 60px)",
+    fontSize: "clamp(24px, 2.8vw, 36px)",
     fontWeight: 300,
     lineHeight: 1.1,
     marginBottom: "24px",
@@ -364,7 +442,7 @@ heroFormNote: {
     fontWeight: 700,
   },
   sectionBody: {
-    fontSize: "17px",
+    fontSize: "14px",
     lineHeight: 1.8,
     color: "#ededed",
     maxWidth: "660px",
@@ -435,6 +513,7 @@ aptOverlay: {
 },
 aptContent: {
   position: "relative" as const,
+  padding: "22px",
   zIndex: 2,
 },
 
@@ -455,7 +534,7 @@ aptContent: {
     marginBottom: "16px",
   },
   aptSize: {
-    fontSize: "clamp(36px, 4vw, 56px)",
+    fontSize: "clamp(24px, 2.5vw, 32px)",
     fontWeight: 300,
     color: "#f5f0e8",
     lineHeight: 1,
@@ -467,7 +546,7 @@ aptContent: {
     marginLeft: "4px",
   },
   aptPrice: {
-    fontSize: "18px",
+    fontSize: "20px",
     color: "#c40000",
     fontWeight: 600,
     margin: "16px 0 20px",
@@ -683,29 +762,22 @@ amenityDesc: {
     marginBottom: "16px",
   },
   formInput: {
-    width: "100%",
-    background: "rgba(180,0,0,0.05)",
-    border: "1px solid rgba(180,0,0,0.2)",
-    color: "#f5f0e8",
-    padding: "16px 20px",
-    fontSize: "14px",
-    fontFamily: "'Montserrat', sans-serif",
-    outline: "none",
-    boxSizing: "border-box" as const,
-    transition: "border-color 0.3s",
-  },
+  padding: "12px 14px",
+  fontSize: "13px",
+  fontWeight: 300,
+  color: "#f5f0e8",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: "6px",
+  outline: "none",
+},
   formSelect: {
-    width: "100%",
-    background: "#140303",
-    border: "1px solid rgba(180,0,0,0.2)",
-    color: "#a89880",
-    padding: "16px 20px",
-    fontSize: "14px",
-    fontFamily: "'Montserrat', sans-serif",
-    outline: "none",
-    boxSizing: "border-box" as const,
-    gridColumn: "1 / -1" as const,
-  },
+  padding: "12px 14px",
+  fontSize: "13px",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  color: "#f5f0e8",
+},
   formSubmit: {
     width: "100%",
     background: "linear-gradient(135deg, #b40000, #7a0000)",
@@ -893,37 +965,42 @@ amenityDesc: {
   },
 };
 
-
 const amenities = [
   {
     icon: <Landmark size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Grand Lamborghini Lobby",
     desc: "An entrance of Italian marble. Lamborghini design.",
+    image: "/images/lambo/amenities/lobby.jpg",
   },
   {
     icon: <Building2 size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Ultra-Luxury Clubhouse",
     desc: "A members-only retreat for refined living.",
+    image: "/images/lambo/amenities/clubhouse.jpg",
   },
   {
     icon: <Waves size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Resort-Style Pool Deck",
     desc: "Infinity-edge pool with cabanas and skyline views.",
+    image: "/images/lambo/amenities/pool.jpg",
   },
   {
     icon: <Dumbbell size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Performance Fitness Centre",
     desc: "World-class gym with training zones and wellness spaces.",
+    image: "/images/lambo/amenities/gym.jpg",
   },
   {
     icon: <Trees size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Curated Landscaped Gardens",
     desc: "Green terraces with Italian-inspired outdoor design.",
+    image: "/images/lambo/amenities/garden.jpg",
   },
   {
     icon: <ConciergeBell size={26} strokeWidth={1.5} color="#b40000" />,
     title: "Concierge & Smart Services",
     desc: "24/7 concierge, smart home tech, and valet services.",
+    image: "/images/lambo/amenities/concierge.jpg",
   },
 ];
 const locationPoints = [
@@ -943,34 +1020,89 @@ const reasons = [
   { title: "Long-Term Asset Growth", body: "Positioned for strong capital appreciation over time." },
 ];
 export default function LamborghiniClient() {
+
+
+const [errors, setErrors] = useState({
+  name: "",
+  phone: "",
+});
+
+  const validateForm = () => {
+  const newErrors: any = {};
+
+  if (!formData.name.trim()) {
+    newErrors.name = "Please enter your name";
+  }
+
+  if (!formData.phone.trim()) {
+    newErrors.phone = "Please enter your phone number";
+  } else if (!/^\d{10}$/.test(formData.phone)) {
+    newErrors.phone = "Enter a valid 10-digit number";
+  }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
+
+const [index, setIndex] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+
+  const slides = amenityImages || [];
+  const total = slides.length;
+
+  React.useEffect(() => {
+    if (!total || paused) return;
+
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % total);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [paused, total]);
+
+  if (!total) return null;
+
+
+
+
+
+useEffect(() => {
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 60);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+const [hovered, setHovered] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+  setMounted(true);
+}, []);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", config: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-const { scrollY } = useScroll();
 
 const [loading, setLoading] = useState(false);
-  const y = useTransform(scrollY, [0, 500], [0, 120]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   useEffect(() => {
-    // Load fonts
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
+  const handleScroll = () => {
+    setScrolled(window.scrollY > 60);
+  };
 
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
 
   const handleSubmit = async (e: React.MouseEvent) => {
   e.preventDefault();
 
-  if (!formData.name || !formData.phone) {
-    alert("Please fill required fields");
-    return;
-  }
+if (!validateForm()) return;
 
   setLoading(true);
 
@@ -997,7 +1129,7 @@ const [loading, setLoading] = useState(false);
     if (res.ok) {
       setSubmitted(true);
     } else {
-      alert("API error: " + res.status);
+      console.error("API error:", res.status);
     }
   } catch (err) {
     console.error("FULL ERROR:", err);
@@ -1006,19 +1138,7 @@ const [loading, setLoading] = useState(false);
     setLoading(false);
   }
 };
-const [isMobile, setIsMobile] = useState(false);
-const [hovered, setHovered] = useState<string | null>(null);
-// Detect screen size
-useEffect(() => {
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
-  };
 
-  handleResize();
-  window.addEventListener("resize", handleResize);
-
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
 
   return (
     
@@ -1029,20 +1149,23 @@ useEffect(() => {
 <nav
   style={{
     ...styles.nav,
-    background: scrolled
-      ? "rgba(10,10,10,0.98)"
-      : "linear-gradient(180deg, rgba(10,10,10,0.95) 0%, transparent 100%)",
+    background: mounted && scrolled
+      ? "rgba(10,10,10,0.95)"
+      : "transparent",
+    backdropFilter: mounted && scrolled
+      ? "blur(6px)"
+      : "none",
+    transition: "all 0.3s ease",
   }}
 >
   {/* LOGO */}
   <div
     style={{ cursor: "pointer" }}
-    onClick={() =>
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      })
-    }
+    onClick={() => {
+  if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}}
   >
     <div style={styles.navLogo}>
       <Image
@@ -1060,13 +1183,7 @@ useEffect(() => {
   </div>
 
   {/* NAV LINKS (HIDE ON MOBILE) */}
-  {!isMobile && (
-    <ul
-      style={{
-        ...styles.navLinks,
-        listStyle: "none",
-      }}
-    >
+  <ul style={styles.navLinks} className="nav-links">
       {[
         { label: "Overview", id: "overview" },
         { label: "Amenities", id: "amenities" },
@@ -1102,7 +1219,6 @@ useEffect(() => {
 </li>
       ))}
     </ul>
-  )}
 
   {/* CTA BUTTON (ALWAYS VISIBLE — MOBILE PRIORITY) */}
  <a
@@ -1110,19 +1226,18 @@ useEffect(() => {
   style={{
     ...styles.navCta,
     textDecoration: "none",
-
-    padding: isMobile ? "6px 10px" : "10px 20px",
-    fontSize: isMobile ? "11px" : "14px",
-
     borderRadius: "4px",
-
-    whiteSpace: "nowrap",   // ✅ FORCE SINGLE LINE
-    flexShrink: 0,          // ✅ PREVENT SQUEEZE
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    padding: "clamp(6px, 2vw, 10px) clamp(10px, 3vw, 20px)",
+    fontSize: "clamp(11px, 1.5vw, 14px)",
   }}
 >
-  {isMobile ? "CALL NOW" : "+91 98114 22554"}
+  <span className="desktop-text">+91 98114 22554</span>
+  <span className="mobile-text">CALL NOW</span>
 </a>
 </nav>
+
 {/* HERO */}
 <section
   style={{
@@ -1134,23 +1249,29 @@ useEffect(() => {
     overflow: "hidden",
   }}
 >
-  {/* VIDEO */}
-  <video
-    autoPlay
-    loop
-    muted
-    playsInline
-    style={{
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      zIndex: 0,
-      filter: "brightness(0.88)",
-    }}
-  >
-    <source src="/videos/lambo/lamborghini-hero.mp4" />
-  </video>
+
+
+  <div
+  style={{
+    position: "absolute",
+    inset: 0,
+    background: "#0a0a0a",
+    zIndex: 0,
+  }}
+/>
+  {/* IMAGE */}
+<Image
+  src="/images/lambo/lamborghini-hero.png"
+  alt="Lamborghini Residences Gurgaon"
+  fill
+  priority
+  style={{
+    objectFit: "cover",
+    zIndex: 0,
+    filter: "brightness(0.88)",
+    opacity: mounted ? 1 : 0,
+  }}
+/>
 
   {/* OVERLAY */}
   <div
@@ -1184,22 +1305,22 @@ useEffect(() => {
     }}
   >
     {/* EYEBROW */}
-    <motion.p
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 },
-      }}
-      transition={{ duration: 0.6 }}
-      style={{
-        fontSize: "11px",
-        letterSpacing: "0.3em",
-        color: "#bbb1b1",
-        marginBottom: "22px",
-        fontFamily: "Montserrat, sans-serif",
-      }}
-    >
-      PRIVATE RESIDENCES · GURUGRAM
-    </motion.p>
+   <motion.p
+  variants={{
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }}
+  transition={{ duration: 0.6 }}
+  style={{
+    fontSize: "11px",
+    letterSpacing: "0.18em",
+    color: "rgba(255,255,255,0.65)",
+    marginBottom: "22px",
+    fontFamily: "Montserrat, sans-serif",
+  }}
+>
+  PRIVATE RESIDENCES · GURUGRAM
+</motion.p>
 
     {/* HEADLINE */}
    <motion.h1
@@ -1209,12 +1330,12 @@ useEffect(() => {
   }}
   transition={{ duration: 0.8 }}
   style={{
-    fontSize: "clamp(32px, 5vw, 76px)", // 🔥 improved scaling
-    fontWeight: 500,
-    letterSpacing: "0.02em", // tighter = more luxury
-    lineHeight: 1.15,
+    fontSize: "clamp(30px, 4.2vw, 64px)",
+fontWeight: 400,
+letterSpacing: "-0.01em",
+    lineHeight: 1.2,
     color: "#ffffff",
-    marginBottom: "20px",
+    marginBottom: "28px",
   }}
 >
   <span style={{ fontWeight: 700 }}>
@@ -1227,8 +1348,8 @@ useEffect(() => {
     marginTop: "6px",
     fontStyle: "italic",
     fontWeight: 400,
-    opacity: 0.9,
-    fontSize: "clamp(20px, 2.5vw, 32px)",
+    opacity: 0.8,
+    fontSize: "clamp(18px, 2vw, 26px)"
   }}
 >
   Live Beyond Ordinary.
@@ -1243,7 +1364,7 @@ useEffect(() => {
   }}
   transition={{ duration: 0.8 }}
   style={{
-    fontSize: "clamp(14px, 1.6vw, 18px)", // 🔥 responsive
+    fontSize: "clamp(14px, 1.6vw, 17px)", // 🔥 responsive
     color: "rgba(255,255,255,0.75)",
     marginBottom: "28px",
     lineHeight: 1.6,
@@ -1253,39 +1374,39 @@ useEffect(() => {
     fontWeight: 300,
   }}
 >
-  Where global design meets elite living in India.
+  A new standard of branded luxury in India.
 </motion.p>
-    <motion.button
-  variants={{
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+<motion.button
+  className="hero-btn btn-hover"
+  style={{
+    ...styles.formSubmit,
+
+    width: "fit-content",
+
+    padding: "13px 20px",      // 🔥 balanced (not bulky, not small)
+    fontSize: "13px",          // 🔥 slightly bigger
+    letterSpacing: "0.10em",   // 🔥 premium spacing
+
+    display: "inline-block",
+    whiteSpace: "nowrap",
+
+    marginTop: "20px",
+    marginLeft: "auto",
+    marginRight: "auto",
   }}
-  transition={{ duration: 0.6 }}
-  whileHover={{
-    y: -4,
-    scale: 1.02,
-    boxShadow: "0 14px 35px rgba(180,0,0,0.35)",
-  }}
-  whileTap={{ scale: 0.97 }}
   onClick={() =>
     document.getElementById("contact")?.scrollIntoView({
       behavior: "smooth",
     })
   }
-  style={{
-    ...styles.formSubmit,
-    width: isMobile ? "100%" : "auto",
-    padding: isMobile ? "16px" : "20px 32px",
-    fontSize: isMobile ? "11px" : "12px",
-    letterSpacing: isMobile ? "0.25em" : "0.4em",
-    marginTop: "20px",
-  }}
 >
-  {isMobile
-    ? "Get Private Access"
-    : "Get Private Access Before Inventory Closes"}
+  <span className="desktop-text">
+    Get Private Access Before Inventory Closes
+  </span>
+  <span className="mobile-text">
+    Get Private Access
+  </span>
 </motion.button>
-
 
     {/* TRUST */}
     <motion.p
@@ -1295,8 +1416,8 @@ useEffect(() => {
       }}
       transition={{ duration: 0.6 }}
       style={{
-        marginTop: "18px",
-        fontSize: "14px",
+        marginTop: "22px",
+        fontSize: "13px",
         color: "rgba(255,255,255,0.7)",
       }}
     >
@@ -1306,6 +1427,8 @@ useEffect(() => {
 
 
 </section>
+
+
 <section
   id="overview"
   style={{
@@ -1321,6 +1444,7 @@ useEffect(() => {
         borderRadius: "14px",
         overflow: "hidden",
         boxShadow: "0 20px 60px rgba(0,0,0,0.15)", // subtle depth
+      filter: "contrast(1.05) brightness(0.95)"
       }}
     >
       <Image
@@ -1387,7 +1511,7 @@ useEffect(() => {
     </div>
 
     <h2 style={styles.sectionTitle}>
-      Choose Your <span style={styles.sectionTitleAccent}>Canvas</span>
+      Select Your <span style={styles.sectionTitleAccent}>Residence</span>
     </h2>
 
     <p style={{ ...styles.sectionBody, maxWidth: "520px" }}>
@@ -1402,7 +1526,7 @@ useEffect(() => {
           size: "2,050",
           price: "Starting ₹4.75 Cr*",
           image: "/images/lambo/apartments/3bhk.png",
-          desc: "Ideal for refined city living",
+          desc: "Designed for those who value quiet sophistication",
         },
         {
           type: "4 BHK",
@@ -1441,7 +1565,7 @@ useEffect(() => {
 
           {/* BADGE */}
           {apt.highlight && (
-            <div className="apt-badge">MOST POPULAR</div>
+            <div className="apt-badge">MOST SELECTED</div>
           )}
 
           {/* OVERLAY */}
@@ -1450,13 +1574,13 @@ useEffect(() => {
           {/* CONTENT */}
           <div className="apt-content">
             <div className="apt-type">{apt.type}</div>
-
+<div className="apt-price">{apt.price}</div>
             <div className="apt-size">
               {apt.size}
               <span className="apt-unit"> sq.ft.</span>
             </div>
 
-            <div className="apt-price">{apt.price}</div>
+            
 
             <div className="apt-desc">{apt.desc}</div>
 
@@ -1468,7 +1592,7 @@ useEffect(() => {
               }
               className="apt-btn"
             >
-              View Private Details
+              Request Private Details
             </button>
           </div>
         </motion.div>
@@ -1478,187 +1602,186 @@ useEffect(() => {
       
     </div>
 
-    <h3 style={{
-  marginTop: "60px",
-  textAlign: "center",
-  fontSize: "18px",
-  color: "#fff"
-}}>
-  Secure Your Residence Before Prices Rise Further
+   <h3
+  style={{
+    marginTop: "60px",
+    textAlign: "center",
+    fontSize: "clamp(14px, 1.2vw, 16px)",
+    letterSpacing: "0.08em",
+    fontWeight: 300,
+    opacity: 0.85,
+    color: "#fff",
+  }}
+>
+  Limited Residences. Reserved for a Select Few.
 </h3>
   </div>
 
 </section>
-{/* AMENITIES */}
-<div
-  id="amenities"
+
+
+{/* AMENITIES + EXPERIENCE */}
+<section
+      id="amenities"
+      className="relative bg-[#0a0a0a] overflow-hidden px-5 md:px-8 pt-[100px] md:pt-[140px] pb-[120px]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/lambo/amenities.jpg"
+          alt=""
+          fill
+          className="object-cover object-[center_25%] scale-105 opacity-60"
+        />
+      </div>
+
+      {/* OVERLAY */}
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(to_right,rgba(0,0,0,0.85)_0%,rgba(0,0,0,0.6)_40%,rgba(0,0,0,0.3)_100%),linear-gradient(to_bottom,rgba(0,0,0,0.4),rgba(0,0,0,0.9))]" />
+
+      <div className="relative z-[2] max-w-[1200px] mx-auto">
+
+        {/* LABEL */}
+        <div className="flex items-center gap-3 mb-4">
+          <span className="w-10 h-[1px] bg-[#d6d0c4]" />
+          <span className="text-[10px] tracking-[0.35em] text-[#d6d0c4] uppercase">
+            Amenities
+          </span>
+        </div>
+
+        <h2
   style={{
-    position: "relative",
-    background: "#0a0a0a",
-    padding: "140px 40px", // 🔥 more breathing space
-    overflow: "hidden",
+    fontSize: "clamp(24px, 2.8vw, 36px)",
+    fontWeight: 300,
+    lineHeight: 1.2,
+    marginBottom: "16px",
+    color: "#f5f3ef",
   }}
 >
-  {/* BACKGROUND */}
-  <div
+  Crafted for{" "}
+  <span
     style={{
-      position: "absolute",
-      inset: 0,
-      backgroundImage: "url('/images/lambo/amenities-bg.png')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      opacity: 0.55,
-      zIndex: 0,
+      color: "#d6d0c4",
+      fontStyle: "italic",
+      fontWeight: 600,
+      position: "relative",
+      display: "inline-block",
     }}
-  />
+  >
+    Extraordinary
+    <span
+      style={{
+        position: "absolute",
+        left: 0,
+        bottom: "-6px",
+        width: "100%",
+        height: "2px",
+        background: "linear-gradient(90deg, #b40000, transparent)",
+      }}
+    />
+  </span>{" "}
+  Living
+</h2>
 
-  {/* OVERLAY */}
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      background:
-        "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0, 0, 0, 0.53))",
-      zIndex: 1,
-    }}
-  />
+        {/* SUBTEXT */}
+        <p className="text-[13px] md:text-[14px] text-[#9a9488] max-w-[520px] leading-[1.7] mb-12 md:mb-16">
+          A private ecosystem designed for comfort, prestige, and effortless luxury.
+        </p>
 
-  {/* CONTENT */}
-  <div style={{ position: "relative", zIndex: 2 }}>
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-      
-      {/* LABEL */}
-      <div
-        style={{
-          fontSize: "10px",
-          letterSpacing: "0.4em",
-          color: "#d6d0c4",
-          textTransform: "uppercase",
-          marginBottom: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: "14px",
-        }}
-      >
-        <span style={{ width: "40px", height: "1px", background: "#d6d0c4" }} />
-        Amenities
-      </div>
+        {/* GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-10 md:gap-x-16 max-w-[900px]">
+          {amenities.map((a, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="flex flex-col gap-2 pl-4 border-l border-white/10 hover:translate-x-1 transition"
+            >
+              <div className="mb-1">
+                {React.cloneElement(a.icon, { size: 22 })}
+              </div>
 
-      {/* TITLE */}
-      <h2
-        style={{
-          fontSize: "clamp(42px, 6vw, 80px)", // 🔥 bigger
-          fontWeight: 300,
-          color: "#f5f3ef",
-          marginBottom: "24px",
-        }}
-      >
-        Crafted for{" "}
-        <span
-          style={{
-            color: "#d6d0c4",
-            fontStyle: "italic",
-            fontWeight: 600,
-            position: "relative",
-            display: "inline-block",
-          }}
-        >
-          Extraordinary
-          <span
-            style={{
-              position: "absolute",
-              left: 0,
-              bottom: "-8px",
-              width: "100%",
-              height: "2px",
-              background: "linear-gradient(90deg, #b40000, transparent)",
-            }}
-          />
-        </span>{" "}
-        Living
-      </h2>
+              <div className="text-[15px] md:text-[17px] font-medium text-[#f5f0e8] tracking-[0.02em]">
+                {a.title}
+              </div>
 
-      {/* SUBTEXT */}
-      <p
-        style={{
-          maxWidth: "560px",
-          marginBottom: "100px",
-          fontSize: "15px", // 🔥 slightly bigger
-          color: "#9a9488",
-          lineHeight: 1.9,
-        }}
-      >
-        Not just amenities — a private ecosystem designed to elevate everyday
-        living into an experience of comfort, prestige, and effortless luxury.
-      </p>
+              <div className="text-[12.5px] md:text-[13px] text-[#a89880] leading-[1.6] opacity-80">
+                {a.desc}
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-      {/* GRID */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "60px 70px", // 🔥 more space
-        }}
-      >
-        {amenities.map((a, i) => (
-          <motion.div
-            key={`${a.title}-${i}`}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
-            viewport={{ once: true }}
-            className="amenity-clean"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
+        {/* SLIDER */}
+        <div className="relative w-full mt-14 md:mt-20 h-[260px] sm:h-[320px] md:h-[420px] lg:h-[520px] rounded-xl overflow-hidden">
+
+          {slides.map((item, i) => (
+            <div
+              key={i}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                i === index ? "opacity-100 z-10" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                sizes="100vw"
+                quality={100}
+                className="object-cover object-center md:object-[center_30%]"
+              />
+
+              <div className="absolute inset-0 bg-black/15" />
+            </div>
+          ))}
+
+          {/* ARROWS */}
+          <button
+            onClick={() =>
+              setIndex((prev) => (prev - 1 + total) % total)
+            }
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full backdrop-blur-md"
           >
-            {/* ICON */}
-            <div className="icon-wrapper">
-              {React.cloneElement(a.icon, {
-                color: "#d6d0c4",
-                size: 34,
-              })}
-            </div>
+            ‹
+          </button>
 
-            {/* TITLE */}
-            <div
-              style={{
-                fontSize: "20px",
-                fontWeight: 600,
-                color: "#f5f3ef",
-              }}
-            >
-              {a.title}
-            </div>
+          <button
+            onClick={() =>
+              setIndex((prev) => (prev + 1) % total)
+            }
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full backdrop-blur-md"
+          >
+            ›
+          </button>
 
-            {/* DESC */}
-            <div
-              style={{
-                fontSize: "14px",
-                color: "#9a9488",
-                lineHeight: 1.8,
-              }}
-            >
-              {a.desc}
-            </div>
-          </motion.div>
-        ))}
+          {/* DOTS */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            {slides.map((_, i) => (
+              <div
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-[6px] w-[6px] rounded-full cursor-pointer ${
+                  i === index ? "bg-white" : "bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* FADE END (fix blank issue) */}
+       <div className="h-[40px] w-full bg-gradient-to-b from-transparent to-black/70 mt-4" />
+
       </div>
-    </div>
-  </div>
-
- 
-</div>
-     
-     
+    </section>
     {/* LOCATION */}
 <div
   id="location"
   style={{
     background: "#0a0a0a",
-    padding: "clamp(110px, 12vw, 150px) 24px",
+    padding: "clamp(70px, 8vw, 100px) 24px",
   }}
 >
   <div
@@ -1667,7 +1790,7 @@ useEffect(() => {
       maxWidth: "1200px",
       margin: "0 auto",
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",
+      gridTemplateColumns: "1fr 1.2fr", // 🔥 image gets more space
       gap: "70px",
       alignItems: "center",
     }}
@@ -1677,11 +1800,11 @@ useEffect(() => {
       {/* LABEL */}
       <div
         style={{
-          fontSize: "11px",
+          fontSize: "10px",
           letterSpacing: "0.35em",
           color: "#d6d0c4",
           textTransform: "uppercase",
-          marginBottom: "20px",
+          marginBottom: "18px",
           display: "flex",
           alignItems: "center",
           gap: "14px",
@@ -1694,11 +1817,12 @@ useEffect(() => {
       {/* TITLE */}
       <h2
         style={{
-          fontSize: "clamp(36px, 5.5vw, 72px)",
+          fontSize: "clamp(24px, 2.8vw, 36px)",
           fontWeight: 300,
           color: "#f5f3ef",
-          marginBottom: "24px",
+          marginBottom: "16px",
           lineHeight: 1.2,
+          letterSpacing: "-0.01em",
         }}
       >
         Where{" "}
@@ -1706,7 +1830,9 @@ useEffect(() => {
           style={{
             color: "#d6d0c4",
             fontStyle: "italic",
+            fontWeight: 600,
             position: "relative",
+            display: "inline-block",
           }}
         >
           Location
@@ -1728,50 +1854,47 @@ useEffect(() => {
       <p
         style={{
           maxWidth: "480px",
-          marginBottom: "48px",
-          fontSize: "clamp(16px, 1.2vw, 18px)",
+          marginBottom: "40px",
+          fontSize: "clamp(13px, 1.1vw, 14px)",
           color: "#9a9488",
-          lineHeight: 1.9,
+          lineHeight: 1.7,
+          fontWeight: 300,
         }}
       >
         At the center of Gurugram’s fastest-growing luxury corridor.
       </p>
-
-      
 
       {/* LIST */}
       <ul
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "18px",
+          gap: "16px",
         }}
       >
         {locationPoints.map((p, i) => (
           <li
-  key={`${p.text}-${i}`}
-  style={{
-    display: "flex",
-    alignItems: "flex-start", // 🔥 KEY FIX
-    gap: "14px",
-   
-    color: "#d6d0c4",
-    fontSize: "clamp(16px, 1.1vw, 17px)",
-    fontWeight: 500,
-    lineHeight: 1.6, // 🔥 IMPORTANT
-  }}
->
-            {/* ⚪ neutral dot (not red) */}
+            key={`${p.text}-${i}`}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "12px",
+              color: "#d6d0c4",
+              fontSize: "clamp(14px, 1vw, 15px)",
+              fontWeight: 400,
+              lineHeight: 1.6,
+            }}
+          >
             <span
-  style={{
-    width: "8px",
-    height: "8px",
-    background: "#d6d0c4",
-    borderRadius: "50%",
-    marginTop: "6px", // 🔥 MAGIC FIX
-    flexShrink: 0,
-  }}
-/>
+              style={{
+                width: "7px",
+                height: "7px",
+                background: "#d6d0c4",
+                borderRadius: "50%",
+                marginTop: "6px",
+                flexShrink: 0,
+              }}
+            />
             {p.text}
           </li>
         ))}
@@ -1782,15 +1905,15 @@ useEffect(() => {
     <div
       style={{
         position: "relative",
-        height: "clamp(320px, 45vw, 520px)",
-        borderRadius: "18px",
+        width: "100%",
+        height: "clamp(260px, 35vw, 420px)", // 🔥 shorter height (wide look)
+        borderRadius: "16px",
         overflow: "hidden",
-        boxShadow: "0 40px 100px rgba(0, 0, 0, 0)",
       }}
     >
       {/* MAP IMAGE */}
       <img
-        src="/images/lambo/location-map.png"
+        src="/images/lambo/location-map.jpg"
         alt="Location Map"
         style={{
           width: "100%",
@@ -1801,17 +1924,7 @@ useEffect(() => {
         }}
       />
 
-      {/* DEPTH OVERLAY */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-  "radial-gradient(circle at center, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))",
-        }}
-      />
-
-      {/* BASE OVERLAY */}
+      {/* OVERLAY */}
       <div
         style={{
           position: "absolute",
@@ -1821,7 +1934,7 @@ useEffect(() => {
         }}
       />
 
-      {/* 🔴 SINGLE FOCUS PIN */}
+      {/* PIN */}
       <div
         style={{
           position: "absolute",
@@ -1837,9 +1950,9 @@ useEffect(() => {
       <div
         style={{
           position: "absolute",
-          bottom: "22px",
-          left: "22px",
-          fontSize: "12px",
+          bottom: "18px",
+          left: "18px",
+          fontSize: "11px",
           letterSpacing: "0.2em",
           color: "#d6d0c4",
           opacity: 0.9,
@@ -1849,41 +1962,34 @@ useEffect(() => {
       </div>
     </div>
   </div>
-
-
 </div>
 
-
+{/* INVEST SECTION */}
 <section
   id="invest"
   style={{
     position: "relative",
-    padding: "130px 24px",
+    padding: "clamp(110px, 12vw, 130px) 24px",
     overflow: "hidden",
   }}
 >
-  {/* 🎥 BACKGROUND VIDEO */}
-  <video
-    autoPlay
-    loop
-    muted
-    playsInline
-    style={{
-      position: "absolute",
-      inset: 0,
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      zIndex: 0,
-      filter: "brightness(0.5) contrast(1.05)",
-      transform: "scale(1.08)",
-      animation: "slowZoom 18s ease-in-out infinite alternate",
-    }}
-  >
-    <source src="/videos/lambo/invest-bg.mp4" />
-  </video>
+  {/* 🎥 BACKGROUND VIDEO (unchanged) */}
+  <Image
+  src="/images/lambo/invest-bg.jpg" // 👉 use your best fallback image
+  alt="Investment Background"
+  fill
+  priority
+  sizes="(max-width: 768px) 100vw, 100vw"
+  style={{
+    objectFit: "cover",
+    objectPosition: "center 30%", // 🔥 prevents top crop
+    zIndex: 0,
+    filter: "brightness(0.6)", // keep readability
+    opacity: mounted ? 1 : 0,
+  }}
+/>
 
-  {/* 🌑 OVERLAY */}
+  {/* OVERLAY (unchanged) */}
   <div
     style={{
       position: "absolute",
@@ -1894,43 +2000,15 @@ useEffect(() => {
     }}
   />
 
-  {/* ✨ DEPTH */}
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      background:
-        "radial-gradient(circle at center, rgba(0,0,0,0.2), rgba(0,0,0,0.8))",
-      zIndex: 1,
-    }}
-  />
-
-  {/* 🔴 SUBTLE BRAND GLOW */}
-  <div
-    style={{
-      position: "absolute",
-      top: "35%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: "520px",
-      height: "520px",
-      background:
-        "radial-gradient(circle, rgba(180,0,0,0.06), transparent 70%)",
-      zIndex: 1,
-    }}
-  />
-
-  {/* CONTENT */}
   <div style={{ position: "relative", zIndex: 2 }}>
     <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-      
+
       {/* LABEL */}
       <div
         style={{
           fontSize: "11px",
-          letterSpacing: "0.35em",
+          letterSpacing: "0.32em",
           color: "#d6d0c4",
-          textTransform: "uppercase",
           marginBottom: "18px",
           display: "flex",
           alignItems: "center",
@@ -1941,36 +2019,37 @@ useEffect(() => {
         Investment Case
       </div>
 
-      {/* TITLE */}
+      {/* TITLE (FIXED) */}
       <h2
         style={{
-          fontSize: "clamp(38px, 5.5vw, 72px)",
+          fontSize: "clamp(26px, 3.2vw, 40px)",
           fontWeight: 300,
           color: "#f5f3ef",
-          marginBottom: "20px",
+          marginBottom: "18px",
           lineHeight: 1.2,
+          letterSpacing: "-0.01em",
         }}
       >
         Why <span style={{ fontStyle: "italic" }}>Smart Capital</span> Is Moving Here
       </h2>
 
-      {/* POWER LINE */}
+      {/* POWER LINE (FIXED) */}
       <p
         style={{
-          fontSize: "18px",
+          fontSize: "clamp(15px, 1.2vw, 17px)",
           color: "#d6d0c4",
-          marginBottom: "18px",
+          marginBottom: "16px",
         }}
       >
         Limited supply. Global demand. Strategic location.
       </p>
 
-      {/* SUBTEXT */}
+      {/* SUBTEXT (REFINED) */}
       <p
         style={{
           maxWidth: "600px",
-          marginBottom: "70px",
-          fontSize: "clamp(14px, 1.1vw, 16px)",
+          marginBottom: "60px",
+          fontSize: "clamp(13px, 1vw, 15px)",
           color: "#a89880",
           lineHeight: 1.8,
         }}
@@ -1979,7 +2058,7 @@ useEffect(() => {
         Positioned in Gurugram’s fastest-growing corridor with strong appreciation potential.
       </p>
 
-      {/* GRID WITH MOTION */}
+      {/* GRID */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -1987,42 +2066,40 @@ useEffect(() => {
         variants={{
           hidden: {},
           show: {
-            transition: { staggerChildren: 0.15 },
+            transition: { staggerChildren: 0.12 },
           },
         }}
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "24px",
+          gap: "22px",
         }}
       >
         {reasons.map((r, i) => (
           <motion.div
-            key={`${r.title}-${i}`}
+            key={i}
             variants={{
               hidden: { opacity: 0, y: 40 },
               show: { opacity: 1, y: 0 },
             }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
             style={{
               background: "rgba(255,255,255,0.025)",
               border: "1px solid rgba(255,255,255,0.08)",
-              padding: "34px 28px",
+              padding: "28px 24px",
               display: "flex",
-              gap: "18px",
+              gap: "16px",
               alignItems: "flex-start",
               backdropFilter: "blur(8px)",
-              transition: "all 0.4s ease",
             }}
-            className="reasonCard"
           >
-            {/* NUMBER */}
+            {/* NUMBER (FIXED) */}
             <div
               style={{
-                fontSize: "42px",
+                fontSize: "32px",
                 fontWeight: 300,
                 color: "rgba(236, 22, 22, 0.66)",
-                minWidth: "50px",
+                minWidth: "40px",
                 fontStyle: "italic",
               }}
             >
@@ -2033,10 +2110,11 @@ useEffect(() => {
             <div>
               <div
                 style={{
-                  fontSize: "17px",
-                  fontWeight: 600,
+                  fontSize: "16px",
+                  fontWeight: 500,
                   color: "#f5f3ef",
                   marginBottom: "6px",
+                  letterSpacing: "0.02em",
                 }}
               >
                 {r.title}
@@ -2057,23 +2135,18 @@ useEffect(() => {
       </motion.div>
 
       {/* CTA */}
-      <div
-        style={{
-          marginTop: "70px",
-          textAlign: "center",
-        }}
-      >
-       <p style={{
-  marginTop: "16px",
-  fontSize: "13px",
-  color: "rgba(255,255,255,0.7)",
-}}>
-  Limited residences · High-net-worth investors only
-</p>
+      <div style={{ marginTop: "60px", textAlign: "center" }}>
+        <p
+          style={{
+            fontSize: "13px",
+            color: "rgba(255,255,255,0.7)",
+          }}
+        >
+          Limited residences · High-net-worth investors only
+        </p>
       </div>
     </div>
   </div>
-
 </section>
       {/* FORM */}
      <div id="contact" style={styles.formSection}>
@@ -2088,9 +2161,18 @@ useEffect(() => {
     </div>
 
     {/* TITLE */}
-    <h2 style={styles.formTitle}>
-      Claim Your <span style={styles.sectionTitleAccent}>Priority Access</span>
-    </h2>
+    <h2
+  style={{
+    fontSize: "clamp(26px, 3.2vw, 40px)", // 🔥 aligned with site
+    fontWeight: 300,
+    color: "#f5f3ef",
+    marginBottom: "18px",
+    letterSpacing: "-0.01em",
+    textAlign: "center",
+  }}
+>
+  Claim Your <span style={styles.sectionTitleAccent}>Priority Access</span>
+</h2>
 
     {/* SUCCESS STATE */}
     {submitted ? (
@@ -2101,21 +2183,29 @@ useEffect(() => {
           animation: "fadeIn 0.5s ease",
         }}
       >
-        <div style={{ fontSize: "50px", marginBottom: "12px" }}>✓</div>
+        <div style={{ fontSize: "42px", marginBottom: "10px" }}>✓</div>
 
-        <h3 style={{ color: "#f5f0e8", fontSize: "22px", marginBottom: "10px" }}>
-          You're on the Priority List
-        </h3>
+<h3
+  style={{
+    color: "#f5f0e8",
+    fontSize: "18px",
+    marginBottom: "8px",
+    fontWeight: 500,
+  }}
+>
+  You're on the Priority List
+</h3>
 
-        <p
-          style={{
-            color: "#a89880",
-            fontFamily: "Montserrat,sans-serif",
-            fontSize: "14px",
-          }}
-        >
-          Our luxury sales team will contact you within 24 hours.
-        </p>
+<p
+  style={{
+    color: "#a89880",
+    fontFamily: "Montserrat,sans-serif",
+    fontSize: "13px",
+    lineHeight: 1.6,
+  }}
+>
+  Our luxury sales team will contact you within 24 hours.
+</p>
 
         {/* OPTIONAL RESET */}
         <button
@@ -2139,27 +2229,51 @@ useEffect(() => {
         <div
           style={{
             ...styles.formGrid,
-            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            
           }}
           className="form-grid"
         >
           <input
-            style={styles.formInput}
-            placeholder="Your Full Name *"
-            value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-          />
+  style={{
+    ...styles.formInput,
+    border: errors.name
+      ? "1px solid #ff4d4d"
+      : styles.formInput.border,
+  }}
+  placeholder="Your Full Name *"
+  value={formData.name}
+  onChange={(e) => {
+    setFormData({ ...formData, name: e.target.value });
+    setErrors({ ...errors, name: "" });
+  }}
+/>
+
+{errors.name && (
+  <div style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "6px" }}>
+    {errors.name}
+  </div>
+)}
 
           <input
-            style={styles.formInput}
-            placeholder="Phone Number *"
-            value={formData.phone}
-            onChange={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-          />
+  style={{
+    ...styles.formInput,
+    border: errors.phone
+      ? "1px solid #ff4d4d"
+      : styles.formInput.border,
+  }}
+  placeholder="Phone Number *"
+  value={formData.phone}
+  onChange={(e) => {
+    setFormData({ ...formData, phone: e.target.value });
+    setErrors({ ...errors, phone: "" });
+  }}
+/>
+
+{errors.phone && (
+  <div style={{ color: "#ff6b6b", fontSize: "12px", marginTop: "6px" }}>
+    {errors.phone}
+  </div>
+)}
 
           <input
             style={{ ...styles.formInput, gridColumn: "1 / -1" }}
@@ -2207,21 +2321,36 @@ useEffect(() => {
         >
           {loading ? "Processing..." : "Request Priority Callback"}
         </button>
-
-        {/* NOTE */}
-        <p style={styles.formNote}>
-          Your information is completely confidential. No spam, ever.
-        </p>
+<p
+  style={{
+    fontSize: "12px",
+    color: "#666",
+    marginTop: "14px",
+    textAlign: "center",
+    lineHeight: 1.6,
+  }}
+>
+  Your information is handled with complete discretion. By submitting, you agree to our{" "}
+  <a
+    href="/privacy-policy"
+    style={{
+      color: "#c8a96a",
+      textDecoration: "none",
+      
+    }}
+  >
+    Privacy Policy
+  </a>.
+</p>
       </>
     )}
   </div>
 </div>
-
-      {/* FOOTER */}
-      <footer
+{/* FOOTER */}
+<footer
   style={{
     background: "#0a0a0a",
-    padding: "80px 30px 40px",
+    padding: "clamp(70px, 10vw, 90px) 24px 40px",
     color: "#eaeaea",
   }}
 >
@@ -2231,8 +2360,8 @@ useEffect(() => {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "1.5fr 1fr 1fr",
-        gap: "50px",
+        gridTemplateColumns: "1.4fr 1fr 1fr",
+        gap: "clamp(30px, 5vw, 50px)",
         marginBottom: "50px",
       }}
       className="footer-top"
@@ -2243,18 +2372,19 @@ useEffect(() => {
           src="/images/lambo/lambologo.png"
           alt="Lamborghini Residences"
           style={{
-            height: "70px",
-            marginBottom: "18px",
-            opacity: 0.9,
+            height: "60px",
+            marginBottom: "16px",
+            opacity: 0.85,
           }}
         />
 
         <p
           style={{
-            fontSize: "14px",
-            lineHeight: 1.6,
-            color: "#a0a0a0",
-            maxWidth: "420px",
+            fontSize: "13px",
+            lineHeight: 1.7,
+            color: "#a89880",
+            maxWidth: "380px",
+            fontWeight: 300,
           }}
         >
           Italian design meets ultra-luxury living in Gurugram.
@@ -2265,10 +2395,10 @@ useEffect(() => {
       <div>
         <div
           style={{
-            fontSize: "11px",
-            letterSpacing: "0.25em",
-            marginBottom: "18px",
-            color: "#777",
+            fontSize: "10px",
+            letterSpacing: "0.35em",
+            marginBottom: "16px",
+            color: "#d6d0c4",
           }}
         >
           NAVIGATION
@@ -2281,14 +2411,17 @@ useEffect(() => {
             { label: "Location", id: "location" },
             { label: "Contact", id: "contact" },
           ].map((l) => (
-            <li key={l.label} style={{ marginBottom: "10px" }}>
+            <li key={l.label} style={{ marginBottom: "8px" }}>
               <a
                 href={`#${l.id}`}
                 style={{
                   color: "#cfcfcf",
                   textDecoration: "none",
-                  fontSize: "14px",
+                  fontSize: "13px",
+                  transition: "opacity 0.2s",
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
                 {l.label}
               </a>
@@ -2301,10 +2434,10 @@ useEffect(() => {
       <div>
         <div
           style={{
-            fontSize: "11px",
-            letterSpacing: "0.25em",
-            marginBottom: "18px",
-            color: "#777",
+            fontSize: "10px",
+            letterSpacing: "0.35em",
+            marginBottom: "16px",
+            color: "#d6d0c4",
           }}
         >
           CONTACT
@@ -2312,9 +2445,10 @@ useEffect(() => {
 
         <p
           style={{
-            fontSize: "14px",
+            fontSize: "13px",
             color: "#cfcfcf",
-            lineHeight: 1.6,
+            lineHeight: 1.7,
+            fontWeight: 300,
           }}
         >
           +91 98114 22554<br />
@@ -2327,30 +2461,31 @@ useEffect(() => {
     <div
       style={{
         height: "1px",
-        background: "rgba(255,255,255,0.08)",
+        background: "rgba(255,255,255,0.06)",
         margin: "30px 0",
       }}
     />
 
-    {/* DISCLAIMER (SHORTENED) */}
+    {/* DISCLAIMER */}
     <p
       style={{
         fontSize: "12px",
         color: "#666",
         lineHeight: 1.6,
         textAlign: "center",
-        maxWidth: "750px",
-        margin: "0 auto 20px",
+        maxWidth: "700px",
+        margin: "0 auto 18px",
+        fontWeight: 300,
       }}
     >
       *Prices and availability are subject to change. Please verify all project details with the developer before making any decision.
     </p>
 
-    {/* MARKETER (KEPT — CLEAN & PREMIUM) */}
+    {/* MARKETER */}
     <p
       style={{
         textAlign: "center",
-        fontSize: "13px",
+        fontSize: "12.5px",
         color: "#888",
         lineHeight: 1.6,
       }}
@@ -2363,7 +2498,7 @@ useEffect(() => {
         style={{
           color: "#eaeaea",
           textDecoration: "none",
-          borderBottom: "1px solid rgba(255,255,255,0.2)",
+          borderBottom: "1px solid rgba(255,255,255,0.15)",
         }}
       >
         Shankar Kohli
@@ -2376,18 +2511,14 @@ useEffect(() => {
         style={{
           color: "#eaeaea",
           textDecoration: "none",
-          borderBottom: "1px solid rgba(255,255,255,0.2)",
+          borderBottom: "1px solid rgba(255,255,255,0.15)",
         }}
       >
         Mark Real Esstate
       </a>
     </p>
   </div>
-
- 
 </footer>
-
-
 {/* GLOBAL STYLES — SINGLE SOURCE */}
 <style jsx global>{`
   @keyframes scrollLine {
@@ -2576,7 +2707,8 @@ useEffect(() => {
     .apt-btn {
       margin-top: 20px;
       width: 100%;
-      padding: 12px;
+      fontSize: "12px",
+      padding: 10px 14px;
       background: transparent;
       border: 1px solid rgba(200,184,154,0.5);
       backdrop-filter: blur(6px);
@@ -2869,6 +3001,56 @@ input:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+ 
+  .hero-btn {
+    width: 100% !important;
+    padding: 16px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.25em !important;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.desktop-text {
+  display: inline;
+}
+
+.mobile-text {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-text {
+    display: none;
+  }
+  .mobile-text {
+    display: inline;
+  }
+}
+
+.hero-btn {
+  width: fit-content !important;
+  display: inline-block;
+  padding: 10px 14px !important;
+  white-space: nowrap;
+  letter-spacing: 0.12em !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 🔥 HOVER EFFECT */
+.btn-hover {
+  transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(180, 0, 0, 0.35);
+  opacity: 0.9;
 }
 `}</style>
 

@@ -1,24 +1,29 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState("right");
 
+  const pathname = usePathname();
+  const router = useRouter();
+
   const navItems = [
-    { label: "INVESTORS", href: "#investors" },
-    { label: "NEW LAUNCH", href: "#new-launch" },
-    { label: "ADVISORY", href: "#advisory" },
-    { label: "WHY CHOOSE", href: "#why" },
+    { label: "ABOUT ME", href: "#about" },
+    { label: "OPPORTUNITIES", href: "#new-launch" },
+    { label: "CASE STUDIES", href: "#case-studies" },
+    { label: "INSIGHTS", href: "#insights" },
   ];
 
-  /* SCROLL DETECTION */
+  /* HEADER BG SCROLL */
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
@@ -28,31 +33,34 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* SCROLL SPY */
+  /* SCROLL SPY (ONLY ON HOMEPAGE) */
   useEffect(() => {
+    if (pathname !== "/") return;
+
     const sections = document.querySelectorAll("[data-section]");
 
     const handleScroll = () => {
       let current = "";
-      let minTop = Infinity;
 
       sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.4 && rect.bottom >= 0) {
-          if (rect.top < minTop) {
-            minTop = rect.top;
-            current = section.getAttribute("data-section") || "";
-          }
+
+        if (
+          rect.top <= window.innerHeight * 0.3 &&
+          rect.bottom >= window.innerHeight * 0.3
+        ) {
+          current = section.getAttribute("data-section") || "";
         }
       });
 
       const index = navItems.findIndex(
-        (item) => item.href.replace("#", "") === current
+        (item) =>
+          item.href.startsWith("#") &&
+          item.href.replace("#", "") === current
       );
 
       if (index !== -1 && index !== activeIndex) {
-        const newDirection = index > activeIndex ? "right" : "left";
-        setDirection(newDirection);
+        setDirection(index > activeIndex ? "right" : "left");
         setActiveIndex(index);
       }
 
@@ -61,8 +69,26 @@ export default function Header() {
 
     window.addEventListener("scroll", handleScroll);
     handleScroll();
+
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeIndex]);
+  }, [activeIndex, pathname]);
+
+  /* SMART NAVIGATION */
+  const handleNavClick = (href: string) => {
+    if (href.startsWith("#")) {
+      if (pathname === "/") {
+        const el = document.querySelector(href);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        router.push("/" + href);
+      }
+    } else {
+      router.push(href);
+    }
+    setOpen(false);
+  };
 
   return (
     <header
@@ -75,24 +101,30 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 flex items-center justify-between">
 
         {/* LOGO */}
-        <div
-          className="cursor-pointer"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
+        <Link href="/">
           <img
             src="/logo.svg"
-            alt="Logo"
-            className="h-8 sm:h-10 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-105"
+            alt="Mark Real Estate"
+            className="h-8 sm:h-10 md:h-8 w-auto object-contain opacity-90 hover:opacity-100 transition"
           />
-        </div>
+        </Link>
 
         {/* DESKTOP NAV */}
-        <nav className="hidden md:flex items-center gap-10 text-sm text-gray-300">
+        <nav className="hidden md:flex items-center gap-10 text-[12px] tracking-[0.15em] text-[#aaa]">
           {navItems.map((item, i) => {
-            const isActive = activeIndex === i;
+            const isActive =
+              activeIndex === i || hoverIndex === i;
 
             return (
-              <a key={i} href={item.href} className="relative px-1 py-1">
+              <button
+                key={i}
+                onClick={() => handleNavClick(item.href)}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() => setHoverIndex(null)}
+                className={`relative px-1 py-1 transition ${
+                  isActive ? "text-white" : ""
+                }`}
+              >
                 {item.label}
 
                 <AnimatePresence mode="wait">
@@ -116,7 +148,7 @@ export default function Header() {
                     />
                   )}
                 </AnimatePresence>
-              </a>
+              </button>
             );
           })}
         </nav>
@@ -124,50 +156,36 @@ export default function Header() {
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-3">
 
-          {/* CTA (DESKTOP ONLY) */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() =>
-              document
-                .getElementById("final-cta")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="hidden md:flex bg-[#C8A45A] text-black 
-                       px-5 py-2 text-sm tracking-[0.12em] 
-                       items-center gap-2"
+          {/* CTA */}
+          <button
+            onClick={() => handleNavClick("#final-cta")}
+            className="hidden md:flex items-center gap-2 px-6 py-2 border border-white/20 text-white/80 text-[12px] tracking-[0.18em] hover:border-[#C8A45A]/50 hover:text-white transition"
           >
             <Phone className="w-4 h-4" />
             Book Consultation
-          </motion.button>
+          </button>
 
           {/* MOBILE MENU BUTTON */}
           <button
-  onClick={() => setOpen(!open)}
-  className="md:hidden relative w-10 h-10 flex items-center justify-center group"
->
-  {/* TOP LINE */}
-  <span
-    className={`absolute w-7 h-[2px] bg-white rounded-full transition-all duration-300 ${
-      open ? "rotate-45 translate-y-0" : "-translate-y-2 group-hover:-translate-y-2.5"
-    }`}
-  />
-
-  {/* MIDDLE LINE */}
-  <span
-    className={`absolute w-5 h-[2px] bg-[#C8A45A] rounded-full transition-all duration-300 ${
-      open ? "opacity-0 scale-0" : "group-hover:w-7"
-    }`}
-  />
-
-  {/* BOTTOM LINE */}
-  <span
-    className={`absolute w-7 h-[2px] bg-white rounded-full transition-all duration-300 ${
-      open ? "-rotate-45 translate-y-0" : "translate-y-2 group-hover:translate-y-2.5"
-    }`}
-  />
-</button>
-
+            onClick={() => setOpen(!open)}
+            className="md:hidden relative w-10 h-10 flex items-center justify-center"
+          >
+            <span
+              className={`absolute w-6 h-[1.5px] bg-white transition-all ${
+                open ? "rotate-45" : "-translate-y-2"
+              }`}
+            />
+            <span
+              className={`absolute w-6 h-[1.5px] bg-white transition-all ${
+                open ? "opacity-0" : "opacity-100"
+              }`}
+            />
+            <span
+              className={`absolute w-6 h-[1.5px] bg-white transition-all ${
+                open ? "-rotate-45" : "translate-y-2"
+              }`}
+            />
+          </button>
         </div>
       </div>
 
@@ -185,18 +203,17 @@ export default function Header() {
                 const isActive = activeIndex === i;
 
                 return (
-                  <a
+                  <button
                     key={i}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className={`pl-3 border-l-2 transition ${
+                    onClick={() => handleNavClick(item.href)}
+                    className={`pl-3 border-l-2 text-left transition ${
                       isActive
                         ? "border-[#C8A45A] text-white"
                         : "border-transparent text-gray-400"
                     }`}
                   >
                     {item.label}
-                  </a>
+                  </button>
                 );
               })}
             </div>

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://shankarkohli.com
+
+# Sitemaps
+Sitemap: https://shankarkohli.com/sitemap.xml

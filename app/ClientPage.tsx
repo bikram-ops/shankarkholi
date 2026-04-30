@@ -7,6 +7,13 @@ import Footer from "./components/Footer";
 import Image from "next/image";
 import { ChevronLeft,  ChevronRight, User, Phone, Mail, IndianRupee  } from "lucide-react";
 
+type Post = {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  image?: string;
+  readTime?: string;
+};
 /* ───────── ANIMATION SYSTEM ───────── */
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -19,7 +26,132 @@ const fadeUp = {
     },
   },
 };
+type CaseStudy = {
+  name: string;
+  image: string;
+  link?: string;
+  insight: string;
+  tag: string;
 
+  // EXISTING (for graph UI)
+  start?: number;
+  mid?: number;
+  end?: number;
+
+  // NEW (for real investor storytelling)
+  launchPrice?: string;
+  currentPrice?: string;
+  appreciation?: string;
+  gain?: string;
+
+  entryYear?: string;
+  currentYear?: string;
+
+  isAccessDeal?: boolean;
+};
+const caseStudies: CaseStudy[] = [
+  // 💰 STRONG INVESTMENT OUTCOMES (PRIMARY)
+
+  {
+    name: "DLF The Arbour",
+    image: "/images/arbour.webp",
+    launchPrice: "₹6.5–7 Cr",
+    currentPrice: "₹10–11 Cr+",
+    appreciation: "50%–70%",
+    gain: "₹3–4 Cr+",
+    entryYear: "2023",
+    currentYear: "2026",
+    tag: "HIGH DEMAND",
+    insight:
+      "Entered during pre-launch inefficiency, capturing ₹3Cr+ upside within ~3 years as demand accelerated.",
+  },
+
+  {
+    name: "Krisumi Waterfall Residences",
+    image: "/images/krisumi.jpg",
+    launchPrice: "₹2.3–3.3 Cr",
+    currentPrice: "₹3.5–7 Cr+",
+    appreciation: "60%–120%",
+    gain: "₹1.5–3 Cr+",
+    entryYear: "2020",
+    currentYear: "2026",
+    tag: "LONG TERM",
+    insight:
+      "Long-term hold aligned with brand-led demand delivered multi-year appreciation of up to 2x.",
+  },
+
+  {
+    name: "Elan The Presidential",
+    image: "/images/elan.jpg",
+    launchPrice: "₹3.8–6 Cr",
+    currentPrice: "₹5–8.5 Cr+",
+    appreciation: "25%–60%",
+    gain: "₹1–2.5 Cr+",
+    entryYear: "2023",
+    currentYear: "2026",
+    tag: "VALUE UNLOCK",
+    insight:
+      "Early investor positioning captured price discovery during initial market expansion phase.",
+  },
+
+  {
+    name: "Trevoc Royal Residences",
+    image: "/images/trevoc_royal.avif",
+    launchPrice: "₹6–6.5 Cr",
+    currentPrice: "₹6.7–7.5 Cr",
+    appreciation: "10%–20%",
+    gain: "₹0.5–1 Cr",
+    entryYear: "2024",
+    currentYear: "2026",
+    tag: "EARLY STAGE",
+    insight:
+      "Early-stage entry secured pricing advantage before broader market momentum builds.",
+  },
+
+  // 🎯 LIVE OPPORTUNITY (NOT CASE STUDY)
+
+  {
+    name: "Westin Residences",
+    image: "/images/westin-residences.png",
+    launchPrice: "₹6.5 Cr",
+    currentPrice: "₹7.2 Cr+",
+    appreciation: "~30%+",
+    gain: "₹1 Cr+",
+    entryYear: "2024",
+    currentYear: "2026",
+    link: "/westinresidences",
+    tag: "LIVE OPPORTUNITY",
+    insight:
+      "Marriott-branded residences driving premium demand and strong early-stage appreciation.",
+  },
+
+  // 🔒 ACCESS DEAL (NO NUMBERS)
+
+  {
+    name: "Elie Saab Residences",
+    image: "/images/elie-saab.webp",
+    tag: "PRIVATE ACCESS",
+    isAccessDeal: true,
+    insight:
+      "Pre-launch inventory secured through developer access before public release.",
+  },
+
+  // ⚠️ OPTIONAL (ONLY KEEP IF YOU ADD DATA)
+
+  {
+  name: "Tulip Monsella",
+  image: "/images/tulip.webp",
+  launchPrice: "₹18,000 / sq ft",
+  currentPrice: "₹32,000 / sq ft",
+  appreciation: "~75%+",
+  gain: "₹14,000 / sq ft growth",
+  entryYear: "2022",
+  currentYear: "2026",
+  tag: "MARKET GROWTH",
+  insight:
+    "Entered early on Golf Course Road, capturing ~75% appreciation as infrastructure and demand rapidly expanded. Future growth driven by premium micro-market positioning.",
+}
+];
 function Reveal({ children }: { children: React.ReactNode }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -58,7 +190,8 @@ const residences = [
   "Tonino Lamborghini",
 ];
 
-export default function Page() {
+export default function Page({ posts }: { posts: Post[] }) {
+const latestPosts = posts;
 const [success, setSuccess] = useState(false);
 const [loading, setLoading] = useState(false);
 const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -96,6 +229,107 @@ const next = () => {
 const prevSlide = () => {
   setActiveIndex((prev: number) => (prev - 1 + videos.length) % videos.length);
 };
+
+const GrowthLine = ({ start, mid, end }: any) => (
+  (() => {
+    const g1 = (mid - start) / start;
+    const g2 = (end - mid) / mid;
+
+    const baseY = 50;
+    const maxGrowth = Math.max(g1, g2);
+    const scale = 50 / maxGrowth;
+
+    const yMid = baseY - g1 * scale;
+    const yEnd = yMid - g2 * scale * 1.4;
+
+    const path: string = `M0 ${baseY} C80 ${yMid + 10}, 120 ${yMid}, 160 ${yMid} S240 ${yEnd}, 300 ${yEnd}`;
+
+    return (
+      <div className="w-full h-[60px] mt-4">
+        <svg viewBox="0 0 300 60" className="w-full h-full">
+
+          {/* base */}
+          <path d={path} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+
+          {/* gold animated line */}
+          <path
+            d={path}
+            fill="none"
+            stroke="#C8A45A"
+            strokeWidth="2"
+            strokeDasharray="400"
+            strokeDashoffset="400"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="400"
+              to="0"
+              dur="2.5s"
+              fill="freeze"
+            />
+          </path>
+
+          {/* arrow */}
+          <polygon points="0,-4 8,0 0,4" fill="#C8A45A">
+            <animateMotion
+              dur="2.5s"
+              fill="freeze"
+              rotate="auto"
+              path={path}
+            />
+          </polygon>
+
+        </svg>
+      </div>
+    );
+  })()
+);
+
+
+const calculateROI = (start: number, end: number) =>
+  Math.round(((end - start) / start) * 100);
+/* COUNTER */
+const Counter = ({ value }: { value: number }) => {
+  const [count, setCount] = useState(0);
+
+ useEffect(() => {
+    let start = 0;
+    const duration = 1200;
+    const step = value / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= value) {
+        setCount(value);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return <span>{count}%</span>;
+};
+
+
+const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const [isPaused, setIsPaused] = useState(false);
+useEffect(() => {
+  if (isPaused) return;
+
+  intervalRef.current = setInterval(() => {
+    setActiveIndex((prev) => (prev + 1) % caseStudies.length);
+  }, 3500);
+
+  return () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+}, [isPaused]);
+
+
+
   return (
     <main style={{ background: "#0A0A0A", color: "#E8E2D9" }}>
 
@@ -116,7 +350,7 @@ const prevSlide = () => {
   </video>
 
   {/* 🌑 OVERLAY */}
-  <div className="hidden md:block absolute inset-0 bg-black/30" />
+  <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
   {/* 🔊 SOUND BUTTON */}
   <button
@@ -186,10 +420,65 @@ const prevSlide = () => {
 </div>
 
 </section>
+
+<section id="about" data-section="about" className="hidden md:block py-20 md:py-28 px-5 bg-[#0f0f0f] border-t border-[#1a1a1a]">
+  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+
+    {/* TEXT (LEFT) */}
+    <div className="max-w-xl">
+
+      <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-5">
+        ABOUT SHANKAR KOHLI
+      </p>
+
+      <h2 className="text-3xl md:text-4xl text-[#E8E2D9] leading-snug mb-6">
+        Trusted Advisor for
+        <span className="block italic text-[#C8A45A] mt-1">
+          Luxury Real Estate in Gurugram
+        </span>
+      </h2>
+
+      <p className="text-[#8A8A8A] text-sm md:text-base leading-relaxed mb-5">
+        Shankar Kohli is a luxury real estate advisor specialising in high-value
+        investments across Gurugram, offering access to pre-launch inventory
+        and off-market opportunities.
+      </p>
+
+      <p className="text-[#8A8A8A] text-sm md:text-base leading-relaxed">
+        Working closely with HNI investors, he focuses on strategic entry,
+        discretion, and long-term value creation in branded residences.
+      </p>
+
+      <div className="w-10 h-[1px] bg-[#C8A45A] mt-8" />
+
+    </div>
+
+    {/* IMAGE (RIGHT) */}
+    <div className="relative w-full h-[520px] overflow-hidden group">
+
+      <Image
+        src="/images/shankar-kohli.jpeg"
+        alt="Shankar Kohli Real Estate Advisor Gurugram"
+        fill
+        sizes="50vw"
+        className="object-cover object-[90%_10%] transition duration-700 group-hover:scale-105"
+      />
+
+      {/* OVERLAY */}
+      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+      {/* GOLD LINE */}
+      <div className="absolute bottom-0 right-0 w-20 h-[2px] bg-[#C8A45A]" />
+
+    </div>
+
+  </div>
+</section>
 <section
   id="investors"
   data-section="investors"
-  className="py-20 md:py-32 bg-[#0f0f0f]"
+  className="py-20 md:py-32 bg-[#111111] border-t border-[#1a1a1a]"
 >
   <div className="w-full grid md:grid-cols-2 items-center">
 
@@ -257,7 +546,7 @@ const prevSlide = () => {
 
   </div>
 </section>
-<section className="relative py-20 md:py-32 overflow-hidden">
+<section className="relative py-20 md:py-32 overflow-hidden bg-[#0c0c0c]">
 
   {/* 🔥 ANIMATED GOLD GLOW */}
   <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -349,8 +638,467 @@ const prevSlide = () => {
   </div>
 </section>
 
+{/* ═════════ GLOBAL → INDIA → LAMBORGHINI (ELITE VERSION) ═════════ */}
+<section
+  id="new-launch"
+  data-section="new-launch"
+  className="py-24 md:py-36 px-5 bg-[#121212] relative overflow-hidden"
+>
+  {/* 🔥 GLOW (optimized) */}
+  <div className="absolute inset-0 -z-10">
+    <div className="absolute w-[600px] h-[600px] bg-[#C8A45A]/10 blur-[60px] rounded-full left-[10%] top-[-100px]" />
+  </div>
+
+  <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+
+    {/* LEFT SIDE */}
+    <div>
+
+      <p className="text-[#C8A45A] text-[10px] tracking-[0.4em] mb-6">
+        GLOBAL LAUNCH
+      </p>
+
+      <h2 className="text-3xl md:text-5xl text-[#E8E2D9] leading-tight mb-6">
+        A Global Luxury Landmark
+        <span className="block italic text-[#C8A45A] mt-2">
+          Now Live in Gurugram
+        </span>
+      </h2>
+
+      <p className="text-[#8A8A8A] text-sm md:text-base leading-relaxed mb-8 max-w-lg">
+        From Miami to Dubai, branded residences define ultra-luxury living.
+        Lamborghini Residences now bring that same global demand,
+        design, and exclusivity to India — now officially launched.
+      </p>
+
+      {/* PRICE */}
+      <p className="text-[#E8E2D9] text-lg mb-1">
+        ₹4.75Cr+ Entry (Live Inventory)
+      </p>
+
+      <p className="text-[#666] text-xs mb-6">
+        ₹24,000/sq.ft • Launch Phase Pricing
+      </p>
+
+      {/* URGENCY */}
+      <p className="text-[#C8A45A] text-xs tracking-[0.15em] mb-8">
+        Limited inventory remaining in initial phase
+      </p>
+
+      {/* CTA */}
+      <div className="flex flex-wrap gap-3">
+
+        {/* PRIMARY */}
+        <button
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.location.href = "/lamborghiniresidences";
+            }
+          }}
+          className="bg-[#C8A45A] text-black px-8 py-3 text-sm tracking-[0.15em] hover:opacity-90 transition"
+        >
+          EXPLORE PROJECT →
+        </button>
+
+
+      </div>
+
+    </div>
+
+    {/* RIGHT SIDE - IMAGE COLLAGE */}
+   <div className="relative h-[420px] md:h-[605px]">
+
+  {/* MAIN IMAGE */}
+  <div className="relative w-full h-full overflow-hidden rounded-xl">
+
+    <Image
+      src="/images/lambo.webp"
+      alt="Luxury Residences in Gurugram"
+      fill
+      sizes="(max-width: 768px) 100vw, 50vw"
+      className="object-cover object-[50%_40%]"
+    />
+
+    {/* DARK OVERLAY */}
+    <div className="absolute inset-0 bg-black/10" />
+
+    {/* GRADIENT DEPTH */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+  
+  </div>
+
+</div>
+
+  </div>
+
+  {/* BOTTOM LINE */}
+  <div className="text-center mt-20 max-w-xl mx-auto">
+    <p className="text-[#8A8A8A] text-sm">
+      Early-phase access is where the strongest long-term value is created.
+    </p>
+  </div>
+
+</section>
+
+<section className="py-24 md:py-32 px-5 bg-[#0a0a0a] border-y border-[#1a1a1a]">
+
+  <div className="max-w-6xl mx-auto">
+
+    {/* LABEL */}
+    <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-5 text-center">
+      TRACK RECORD
+    </p>
+
+    {/* HEADING */}
+    <h2 className="text-2xl md:text-4xl text-[#E8E2D9] mb-16 max-w-2xl mx-auto text-center leading-snug">
+      Proven Access to
+      <span className="block italic text-[#C8A45A] mt-1">
+        High-Performing Luxury Assets
+      </span>
+    </h2>
+
+    {/* 🔥 PROJECT CARDS FIRST */}
+    <div className="grid md:grid-cols-2 gap-8 mb-20">
+
+      {/* WESTIN */}
+      <Link href="/westinresidences" className="block">
+        <div className="group cursor-pointer bg-[#111] border border-[#1a1a1a] 
+                        hover:border-[#C8A45A]/40 
+                        hover:shadow-[0_0_40px_rgba(200,164,90,0.08)] 
+                        transition duration-500 overflow-hidden">
+
+          <div className="relative h-[300px] md:h-[360px] overflow-hidden">
+            <Image
+              src="/images/westin.jpg"
+              alt="Westin Residences"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          </div>
+
+          <div className="p-6 flex flex-col h-full">
+
+  <h3 className="text-[#E8E2D9] text-lg mb-2 group-hover:text-white transition">
+    Westin Residences
+  </h3>
+
+  <p className="text-[#C8A45A] text-sm mb-3">
+    ₹6.5Cr → ₹7.22Cr
+  </p>
+
+  <p className="text-[#8A8A8A] text-sm leading-relaxed mb-6">
+    ~35% return on deployed capital through structured pre-launch entry.
+  </p>
+
+  {/* 🔥 CTA */}
+  <div className="mt-auto flex items-center justify-between">
+
+    <span className="text-xs text-[#C8A45A] tracking-[0.15em] 
+                     group-hover:translate-x-1 transition">
+      View Full Project →
+    </span>
+
+    <div className="w-8 h-[1px] bg-[#C8A45A] 
+                    group-hover:w-12 transition-all duration-300" />
+
+  </div>
+
+</div>
+        </div>
+      </Link>
+
+      {/* ELIE SAAB */}
+      <div className="group bg-[#111] border border-[#1a1a1a] hover:border-[#C8A45A]/30 transition duration-500 overflow-hidden">
+
+        <div className="relative h-[300px] md:h-[360px] overflow-hidden">
+          <Image
+            src="/images/elie-saab.webp"
+            alt="Elie Saab Residences"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        </div>
+
+        <div className="p-6">
+          <h3 className="text-[#E8E2D9] text-lg mb-2">
+            Elie Saab Residences
+          </h3>
+          <p className="text-[#C8A45A] text-sm mb-3">
+            INVITE ONLY
+          </p>
+          <p className="text-[#8A8A8A] text-sm">
+            Secured exclusive inventory before public release.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    {/* 🔥 STATS AT BOTTOM */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center border-t border-[#1a1a1a] pt-12">
+
+      <div>
+        <p className="text-2xl md:text-3xl text-[#C8A45A]">₹120Cr+</p>
+        <p className="text-xs text-[#777] mt-1">Deals Facilitated</p>
+      </div>
+
+      <div>
+        <p className="text-2xl md:text-3xl text-[#C8A45A]">40+</p>
+        <p className="text-xs text-[#777] mt-1">Investors</p>
+      </div>
+
+      <div>
+        <p className="text-2xl md:text-3xl text-[#C8A45A]">2X–3.5X</p>
+        <p className="text-xs text-[#777] mt-1">Avg Growth</p>
+      </div>
+
+      <div>
+        <p className="text-2xl md:text-3xl text-[#C8A45A]">5+ Years</p>
+        <p className="text-xs text-[#777] mt-1">Experience</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+{/* ═════════ CASE STUDIES (ELITE VERSION) ═════════ */}
+<section id="case-studies" data-section="case-studies" className="py-28 md:py-36 px-5 bg-[#0e0e0e] overflow-hidden">
+  <div className="max-w-6xl mx-auto text-center">
+
+    <p className="text-[#C8A45A] text-[10px] tracking-[0.4em] mb-6">
+      STRATEGIC ENTRY CASE STUDIES
+    </p>
+
+    <h2 className="text-3xl md:text-5xl text-[#E8E2D9] mb-20">
+      Investment Strategies.
+      <span className="block italic text-[#C8A45A] mt-2">
+        Backed by Data & Access
+      </span>
+    </h2>
+
+    <div
+      className="relative flex items-center justify-center"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+
+      {/* NAV */}
+      <button
+        onClick={() =>
+          setActiveIndex((prev) =>
+            (prev - 1 + caseStudies.length) % caseStudies.length
+          )
+        }
+        className="absolute left-0 z-20 text-white/40 hover:text-white"
+      >
+        ←
+      </button>
+
+      <button
+        onClick={() =>
+          setActiveIndex((prev) =>
+            (prev + 1) % caseStudies.length
+          )
+        }
+        className="absolute right-0 z-20 text-white/40 hover:text-white"
+      >
+        →
+      </button>
+
+      {/* CARDS */}
+      <div className="relative w-full max-w-5xl h-[560px]">
+
+        {caseStudies.map((item, i) => {
+          const isActive = i === activeIndex;
+
+          const isGraphCase = item.start && item.end;
+          const isValueCase = item.launchPrice && item.currentPrice;
+
+          const roi =
+            isGraphCase && !item.isAccessDeal
+              ? calculateROI(item.start!, item.end!)
+              : 0;
+
+          return (
+            <motion.div
+              key={i}
+              animate={{
+                scale: isActive ? 1 : 0.85,
+                opacity: isActive ? 1 : 0.25,
+                x:
+                  i === activeIndex
+                    ? 0
+                    : i < activeIndex
+                    ? -240
+                    : 240,
+                rotate: isActive ? 0 : i < activeIndex ? -2 : 2,
+                zIndex: isActive ? 10 : 5,
+                filter: isActive ? "none" : "blur(2px)",
+              }}
+              transition={{ duration: 0.5 }}
+              className="absolute w-full"
+            >
+              <div className="group bg-[#121212] border border-[#1f1f1f] hover:border-[#C8A45A]/40 transition duration-500">
+
+                {/* IMAGE */}
+                <div className="relative h-[240px]">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40" />
+
+                  <div className="absolute top-4 left-4 text-[10px] text-[#C8A45A] tracking-[0.2em]">
+                    {item.tag}
+                  </div>
+                </div>
+
+                <div className="p-8 text-left">
+
+                  {/* CASE TYPE */}
+                  <p className="text-[10px] text-[#777] tracking-[0.2em] mb-2">
+                    {item.isAccessDeal
+                      ? "PRIVATE ACCESS"
+                      : item.start
+                      ? "MARKET GROWTH"
+                      : "INVESTMENT OUTCOME"}
+                  </p>
+
+                  {/* NAME */}
+                  <p className="text-[#C8A45A] text-xs mb-4">
+                    {item.name}
+                  </p>
+
+                  {/* 💰 HERO MONEY */}
+                  {isValueCase && (
+                    <div className="mb-6">
+                      {item.appreciation && (
+                        <p className="text-3xl md:text-4xl text-[#C8A45A] font-light leading-none">
+                          {item.appreciation}
+                        </p>
+                      )}
+
+                      {item.gain && (
+                        <p className="text-xs text-[#888] mt-1">
+                          {item.gain} wealth created
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 📊 GRAPH ROI */}
+                  {isGraphCase && !item.isAccessDeal && (
+                    <p className="text-2xl text-[#C8A45A] mb-4">
+                      ROI: <Counter value={roi} />
+                    </p>
+                  )}
+
+                  {/* 💸 CLEAN PRICE */}
+                  {isValueCase && (
+                    <div className="mb-6 text-sm">
+                      <div className="flex justify-between text-[#aaa]">
+                        <span>Entry</span>
+                        <span>{item.launchPrice}</span>
+                      </div>
+
+                      <div className="flex justify-between text-white mt-1">
+                        <span>Current</span>
+                        <span>{item.currentPrice}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ⏱ TIMEFRAME */}
+                  {item.entryYear && item.currentYear && (
+                    <p className="text-[11px] text-[#666] mb-6">
+                      {item.entryYear} → {item.currentYear}
+                    </p>
+                  )}
+
+                  {/* 🔒 ACCESS */}
+                  {item.isAccessDeal && (
+                    <div className="text-sm text-[#C8A45A] mb-6">
+                      Private Inventory Secured Before Public Release
+                    </div>
+                  )}
+
+                  {/* 📈 GRAPH */}
+                  {isGraphCase && !item.isAccessDeal && (
+                    <GrowthLine
+                      start={item.start}
+                      mid={item.mid}
+                      end={item.end}
+                    />
+                  )}
+
+                  {/* 🧠 INSIGHT */}
+                  <p className="text-[#8A8A8A] text-sm mt-4 leading-relaxed">
+                    {item.insight}
+                  </p>
+
+                  {/* CTA */}
+                  <div className="mt-6 flex items-center justify-between">
+                    <span className="text-xs text-[#666]">
+                      PRIVATE ACCESS
+                    </span>
+
+                    {item.link ? (
+                      <Link href={item.link}>
+                        <span className="text-[#C8A45A] text-sm hover:translate-x-1 transition cursor-pointer">
+                          VIEW →
+                        </span>
+                      </Link>
+                    ) : (
+                      <span className="text-[#666] text-sm">
+                        INVITE ONLY
+                      </span>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+
+      </div>
+    </div>
+
+  </div>
+  {/* VIEW ALL CASE STUDIES */}
+<div className="mt-20 text-center">
+
+  <Link href="/case-studies">
+    <button className="group relative inline-flex items-center gap-2 px-8 py-3 
+                      border border-[#C8A45A]/40 
+                      text-[#C8A45A] text-sm tracking-[0.15em]
+                      hover:bg-[#C8A45A] hover:text-black 
+                      transition duration-300">
+
+      VIEW ALL CASE STUDIES
+
+      <span className="group-hover:translate-x-1 transition">
+        →
+      </span>
+
+    </button>
+  </Link>
+
+</div>
+</section>
+
+
 {/* ═════════ AUTHORITY (WITH IMAGE) ═════════ */}
-<section className="py-24 md:py-36 px-5">
+<section className="py-24 md:py-36 px-5 bg-gradient-to-b from-[#0a0a0a] to-[#111]">
   <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
 
     {/* IMAGE */}
@@ -417,244 +1165,110 @@ const prevSlide = () => {
 
   </div>
 </section>
-{/* ═════════ GLOBAL → INDIA → LAMBORGHINI (ELITE VERSION) ═════════ */}
-<section
-  id="new-launch"
-  data-section="new-launch"
-  className="py-24 md:py-36 px-5 bg-[#0f0f0f] relative overflow-hidden"
->
-  {/* 🔥 GLOW (optimized) */}
-  <div className="absolute inset-0 -z-10">
-    <div className="absolute w-[600px] h-[600px] bg-[#C8A45A]/10 blur-[60px] rounded-full left-[10%] top-[-100px]" />
-  </div>
+{/* ═════════ MARKET INSIGHTS (BLOG) ═════════ */}
+<section id="insights" data-section="insights" className="py-28 md:py-36 px-5 bg-[#0a0a0a]">
 
-  <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
-    {/* LEFT SIDE */}
-    <div>
-
-      <p className="text-[#C8A45A] text-[10px] tracking-[0.4em] mb-6">
-        GLOBAL LAUNCH
-      </p>
-
-      <h2 className="text-3xl md:text-5xl text-[#E8E2D9] leading-tight mb-6">
-        A Global Luxury Landmark
-        <span className="block italic text-[#C8A45A] mt-2">
-          Now Live in Gurugram
-        </span>
-      </h2>
-
-      <p className="text-[#8A8A8A] text-sm md:text-base leading-relaxed mb-8 max-w-lg">
-        From Miami to Dubai, branded residences define ultra-luxury living.
-        Lamborghini Residences now bring that same global demand,
-        design, and exclusivity to India — now officially launched.
-      </p>
-
-      {/* PRICE */}
-      <p className="text-[#E8E2D9] text-lg mb-1">
-        ₹4.75Cr+ Entry (Live Inventory)
-      </p>
-
-      <p className="text-[#666] text-xs mb-6">
-        ₹24,000/sq.ft • Launch Phase Pricing
-      </p>
-
-      {/* URGENCY */}
-      <p className="text-[#C8A45A] text-xs tracking-[0.15em] mb-8">
-        Limited inventory remaining in initial phase
-      </p>
-
-      {/* CTA */}
-      <div className="flex flex-wrap gap-3">
-
-        {/* PRIMARY */}
-        <button
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              window.location.href = "/lamborghiniresidences";
-            }
-          }}
-          className="bg-[#C8A45A] text-black px-8 py-3 text-sm tracking-[0.15em] hover:opacity-90 transition"
-        >
-          EXPLORE PROJECT →
-        </button>
-
-
-      </div>
-
-    </div>
-
-    {/* RIGHT SIDE - IMAGE COLLAGE */}
-    <div className="relative h-[500px] md:h-[600px]">
-
-      {/* MAIN IMAGE */}
-      <div className="absolute w-[70%] h-[70%] top-0 right-0 overflow-hidden rounded-xl">
-        <Image
-          src="/images/lamborghini.png"
-          alt="Lamborghini Residences Exterior"
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover"
-        />
-      </div>
-
-      {/* SMALL IMAGE 1 */}
-      <div className="absolute w-[45%] h-[40%] bottom-0 left-0 overflow-hidden rounded-xl border border-[#C8A45A]/20">
-        <Image
-          src="/images/lambo.png"
-          alt="Luxury Interior"
-          fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover"
-        />
-      </div>
-
-      {/* SMALL IMAGE 2 */}
-      <div className="absolute w-[35%] h-[30%] top-[50%] left-[10%] overflow-hidden rounded-xl border border-[#C8A45A]/20">
-        <Image
-          src="/images/lamborgini-lifestyle.png"
-          alt="Lifestyle Experience"
-          fill
-          sizes="(max-width: 768px) 50vw, 20vw"
-          className="object-cover"
-        />
-      </div>
-
-    </div>
-
-  </div>
-
-  {/* BOTTOM LINE */}
-  <div className="text-center mt-20 max-w-xl mx-auto">
-    <p className="text-[#8A8A8A] text-sm">
-      Early-phase access is where the strongest long-term value is created.
-    </p>
-  </div>
-
-</section>
-{/* ═════════ TRACK RECORD (PREMIUM FIXED) ═════════ */}
-<section className="py-24 md:py-32 px-5 bg-[#0a0a0a]">
-
-  <div className="max-w-6xl mx-auto">
+  <div className="max-w-6xl mx-auto text-center">
 
     {/* LABEL */}
-    <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-5">
-      TRACK RECORD
+    <p className="text-[#C8A45A] text-[10px] tracking-[0.4em] mb-6">
+      MARKET INSIGHTS
     </p>
 
     {/* HEADING */}
-    <h2 className="text-2xl md:text-4xl text-[#E8E2D9] mb-16 max-w-2xl leading-snug">
-      Proven Access to
-      <span className="block italic text-[#C8A45A] mt-1">
-        High-Performing Luxury Assets
+    <h2 className="text-3xl md:text-5xl text-[#E8E2D9] mb-20">
+      Strategic Thinking.
+      <span className="block italic text-[#C8A45A] mt-2">
+        Backed by Market Reality
       </span>
     </h2>
 
-    {/* GRID */}
-    <div className="grid md:grid-cols-2 gap-8">
+    {/* INSIGHTS GRID */}
+    <div className="grid md:grid-cols-3 gap-8 text-left">
 
-   <Link href="/westinresidences" className="block">
-  <div className="group cursor-pointer bg-[#111] border border-[#1a1a1a] 
-                  hover:border-[#C8A45A]/40 
-                  hover:shadow-[0_0_40px_rgba(200,164,90,0.08)] 
-                  transition duration-500 overflow-hidden">
+  {latestPosts.map((post, i) => (
 
-    {/* IMAGE */}
-    <div className="relative h-[300px] md:h-[360px] overflow-hidden">
-      <Image
-        src="/images/westin.jpg"
-        alt="Westin Residences"
-        fill
-        sizes="(max-width: 768px) 100vw, 50vw"
-        className="object-cover transition duration-700 ease-out group-hover:scale-110"
-      />
+    <Link key={i} href={`/insights/${post.slug}`}>
 
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition duration-500" />
-
-      {/* GRADIENT */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-      {/* TOP RIGHT CTA HINT */}
-      <div className="absolute top-4 right-4 text-[10px] tracking-[0.2em] text-[#C8A45A] opacity-0 group-hover:opacity-100 transition">
-        VIEW →
-      </div>
-    </div>
-
-    {/* CONTENT */}
-    <div className="p-6 flex flex-col h-full">
-
-      <h3 className="text-[#E8E2D9] text-lg mb-2 group-hover:text-white transition">
-        Westin Residences
-      </h3>
-
-      <p className="text-[#C8A45A] text-sm mb-3">
-        ₹6.5Cr → ₹7.22Cr
-      </p>
-
-      <p className="text-[#8A8A8A] text-sm leading-relaxed mb-6">
-        ~35% return on deployed capital through structured pre-launch entry.
-      </p>
-
-      {/* CTA */}
-      <div className="mt-auto flex items-center justify-between">
-
-        <span className="text-xs text-[#C8A45A] tracking-[0.15em] 
-                         group-hover:translate-x-1 transition">
-          VIEW FULL PROJECT →
-        </span>
-
-        <div className="w-8 h-[1px] bg-[#C8A45A] 
-                        group-hover:w-12 transition-all duration-300" />
-
-      </div>
-
-    </div>
-
-  </div>
-</Link>
-      {/* ELIE SAAB */}
-      <div className="group bg-[#111] border border-[#1a1a1a] hover:border-[#C8A45A]/30 transition duration-500 overflow-hidden">
+      <div className="group bg-[#111] border border-[#1a1a1a] p-6 
+                      hover:border-[#C8A45A]/40 
+                      hover:shadow-[0_0_30px_rgba(200,164,90,0.08)]
+                      transition duration-500">
 
         {/* IMAGE */}
-        <div className="relative h-[300px] md:h-[360px] overflow-hidden">
+        <div className="relative h-[180px] mb-5 overflow-hidden">
+
           <Image
-  src="/images/elie-saab.webp"
-  alt="Elie Saab Residences"
-  fill
-  sizes="(max-width: 768px) 100vw, 50vw"
-  className="object-cover transition duration-700 group-hover:scale-110"
-/>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            src={post.image || `/insights/${post.slug}.jpg`}
+            alt={post.title}
+            fill
+            className="object-cover group-hover:scale-105 transition duration-500"
+          />
+
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        {/* CONTENT */}
-        <div className="p-6">
+        {/* META */}
+        <p className="text-[10px] text-[#666] mb-2 tracking-[0.15em]">
+          {post.readTime || "3 MIN READ"}
+        </p>
 
-          <h3 className="text-[#E8E2D9] text-lg mb-2">
-            Elie Saab Residences
-          </h3>
+        {/* TITLE */}
+        <h3 className="text-[#E8E2D9] text-lg mb-3 group-hover:text-white transition">
+          {post.title}
+        </h3>
 
-          <p className="text-[#C8A45A] text-sm mb-3">
-            Off-Market Allocation
-          </p>
+        {/* EXCERPT */}
+        <p className="text-[#8A8A8A] text-sm leading-relaxed mb-6">
+          {post.excerpt}
+        </p>
 
-          <p className="text-[#8A8A8A] text-sm leading-relaxed">
-            Secured exclusive inventory before public release with high demand positioning.
-          </p>
+        {/* CTA */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-[#666]">
+            READ INSIGHT
+          </span>
 
-          <div className="w-8 h-[1px] bg-[#C8A45A] mt-5 group-hover:w-12 transition-all duration-300" />
-
+          <span className="text-[#C8A45A] text-sm group-hover:translate-x-1 transition">
+            →
+          </span>
         </div>
 
       </div>
 
+    </Link>
+
+  ))}
+
+</div>
+
+    {/* VIEW ALL BLOG */}
+    <div className="mt-16">
+
+      <Link href="/insights">
+        <button className="group inline-flex items-center gap-2 px-8 py-3 
+                          border border-[#C8A45A]/40 
+                          text-[#C8A45A] text-sm tracking-[0.15em]
+                          hover:bg-[#C8A45A] hover:text-black 
+                          transition duration-300">
+
+          VIEW ALL INSIGHTS
+
+          <span className="group-hover:translate-x-1 transition">
+            →
+          </span>
+
+        </button>
+      </Link>
+
     </div>
 
   </div>
+
 </section>
+
 {/* ═════════ RECOGNITION (AUTO SCROLL PREMIUM) ═════════ */}
-<section className="py-20 md:py-28 px-5 bg-[#0f0f0f] overflow-hidden">
+<section className="py-20 md:py-28 px-5 bg-[#0c0c0c] overflow-hidden">
   <div className="max-w-6xl mx-auto text-center">
 
     {/* LABEL */}
@@ -727,7 +1341,7 @@ const prevSlide = () => {
   </div>
 </section>
      {/* ═════════ STRATEGIC ADVISORY (PREMIUM) ═════════ */}
-<section id="advisory" data-section="advisory" className="py-24 md:py-36 px-5 bg-[#0f0f0f]">
+<section id="advisory" data-section="advisory" className="py-24 md:py-36 px-5 bg-[#111111]">
   <div className="max-w-6xl mx-auto">
 
     {/* LABEL */}
@@ -812,12 +1426,12 @@ const prevSlide = () => {
   </div>
 </section>
 
- <section id="insights" className="section-dark">
+ <section className="section-dark">
       <div className="section-inner text-center">
 
         {/* LABEL */}
         <p className="text-[#C8A45A] text-[10px] tracking-[0.35em] mb-4">
-          TRUST & INSIGHTS
+          TRUSTED BY SERIOUS INVESTORS
         </p>
 
         {/* HEADING */}
@@ -1015,7 +1629,7 @@ const prevSlide = () => {
   />
 
   {/* OVERLAY */}
-  <div className="absolute inset-0 bg-black/80" />
+  <div className="absolute inset-0 bg-black/70" />
 
   <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
@@ -1049,7 +1663,8 @@ const prevSlide = () => {
     </div>
 
     {/* RIGHT SIDE FORM */}
-    <div className="bg-[#0f0f0f]/90 backdrop-blur-md border border-[#1a1a1a] p-6 md:p-8">
+    <div className="bg-[#111]/90 backdrop-blur-md border border-[#1a1a1a] p-6 md:p-8"
+    >
 
     <form
   onSubmit={async (e) => {
